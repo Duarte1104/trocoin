@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "anuncioId": 1,
+    "utilizadorId": 1,
+    "outroUtilizadorId": 2,
+    "ultimaMensagem": "Ainda está disponível?",
+    "dataUltimaMensagem": "10:32",
+    "mensagensNaoLidas": 1
+  },
+  {
+    "id": 2,
+    "anuncioId": 2,
+    "utilizadorId": 1,
+    "outroUtilizadorId": 3,
+    "ultimaMensagem": "Aceito a troca pela sua peça.",
+    "dataUltimaMensagem": "11:10",
+    "mensagensNaoLidas": 0
+  }
+]

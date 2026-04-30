@@ -1,1 +1,42 @@
-[]
+[
+  {
+    "id": 1,
+    "nome": "1 Euro Espanha 1988 - Rara",
+    "pais": "Espanha",
+    "ano": 1988,
+    "material": "Bimetálica",
+    "estado": "Muito Bom",
+    "descricao": "Moeda rara de 1 euro espanhola, indicada para colecionadores.",
+    "imagem": "assets/img/moedas/moeda-ouro.png"
+  },
+  {
+    "id": 2,
+    "nome": "1 Euro Espanha 1988 Circ.",
+    "pais": "Espanha",
+    "ano": 1988,
+    "material": "Bimetálica",
+    "estado": "Bom",
+    "descricao": "Moeda de 1 euro em estado circulado.",
+    "imagem": "assets/img/moedas/moeda-prata.png"
+  },
+  {
+    "id": 3,
+    "nome": "Gold 20 Francs 1910",
+    "pais": "França",
+    "ano": 1910,
+    "material": "Ouro",
+    "estado": "Excelente",
+    "descricao": "Moeda de ouro de 20 francos, ano 1910.",
+    "imagem": "assets/img/moedas/moeda-dourada.png"
+  },
+  {
+    "id": 4,
+    "nome": "Roman Denarius Copy",
+    "pais": "Roma",
+    "ano": 120,
+    "material": "Bronze",
+    "estado": "Razoável",
+    "descricao": "Cópia inspirada num denário romano antigo.",
+    "imagem": "assets/img/moedas/moeda-bronze.png"
+  }
+]

@@ -1,1 +1,20 @@
-[]
+[
+  {
+    "id": 1,
+    "conversaId": 1,
+    "anuncioId": 1,
+    "remetenteId": 1,
+    "texto": "Olá! Tenho interesse na sua moeda. Ainda está disponível?",
+    "data": "10:30",
+    "tipo": "texto"
+  },
+  {
+    "id": 2,
+    "conversaId": 1,
+    "anuncioId": 1,
+    "remetenteId": 2,
+    "texto": "Olá! Ainda está disponível, sim.",
+    "data": "10:32",
+    "tipo": "texto"
+  }
+]

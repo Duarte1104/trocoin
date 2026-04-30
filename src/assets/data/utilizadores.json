@@ -1,1 +1,29 @@
-[]
+[
+  {
+    "id": 1,
+    "nome": "Duarte Pereira",
+    "username": "duarte_pereira",
+    "email": "duarte@gmail.com",
+    "morada": "Rua das Rosas 250, Viana do Castelo",
+    "avatar": "",
+    "avaliacao": 5
+  },
+  {
+    "id": 2,
+    "nome": "Numis Madrid",
+    "username": "numis_madrid",
+    "email": "numis.madrid@email.com",
+    "morada": "Madrid, Espanha",
+    "avatar": "N",
+    "avaliacao": 4
+  },
+  {
+    "id": 3,
+    "nome": "Collector 22",
+    "username": "collector_22",
+    "email": "collector22@email.com",
+    "morada": "Porto, Portugal",
+    "avatar": "C",
+    "avaliacao": 5
+  }
+]

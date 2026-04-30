@@ -1,1 +1,47 @@
-[]
+[
+  {
+    "id": 1,
+    "moedaId": 1,
+    "titulo": "1 Euro Espanha 1988 - Rara",
+    "descricao": "Moeda rara em muito bom estado. Ideal para completar coleção europeia.",
+    "preco": 15,
+    "tipo": "venda-troca",
+    "estadoConservacao": "Muito Bom",
+    "localizacao": "Portugal, Viana do Castelo",
+    "vendedorId": 2,
+    "imagens": ["assets/img/moedas/moeda-ouro.png"],
+    "favorito": false,
+    "publicadoPeloUtilizador": false,
+    "dataPublicacao": "2026-05-01"
+  },
+  {
+    "id": 2,
+    "moedaId": 2,
+    "titulo": "1 Euro Espanha 1988 Circ.",
+    "descricao": "Moeda circulada em bom estado geral.",
+    "preco": 8.5,
+    "tipo": "venda",
+    "estadoConservacao": "Bom",
+    "localizacao": "Porto, Portugal",
+    "vendedorId": 3,
+    "imagens": ["assets/img/moedas/moeda-prata.png"],
+    "favorito": false,
+    "publicadoPeloUtilizador": false,
+    "dataPublicacao": "2026-05-02"
+  },
+  {
+    "id": 3,
+    "moedaId": 3,
+    "titulo": "Gold 20 Francs 1910",
+    "descricao": "Moeda de coleção em excelente estado.",
+    "preco": 32,
+    "tipo": "troca",
+    "estadoConservacao": "Excelente",
+    "localizacao": "Lisboa, Portugal",
+    "vendedorId": 2,
+    "imagens": ["assets/img/moedas/moeda-dourada.png"],
+    "favorito": false,
+    "publicadoPeloUtilizador": false,
+    "dataPublicacao": "2026-05-03"
+  }
+]
