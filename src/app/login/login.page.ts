@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -6,11 +7,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./login.page.scss'],
   standalone: false
 })
-export class LoginPage implements OnInit {
+export class LoginPage {
 
-  constructor() { }
+  constructor(private router: Router) {}
 
-  ngOnInit() {
+  // Simula o login e encaminha o utilizador para a página principal da app
+  public entrar(): void {
+    this.router.navigateByUrl('/tabs/pesquisar');
   }
 
+  // Encaminha o utilizador para a criação de conta
+  public criarConta(): void {
+    this.router.navigateByUrl('/criar-conta');
+  }
 }

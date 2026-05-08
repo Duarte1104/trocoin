@@ -1,0 +1,92 @@
+.register-content {
+  --background: #ffffff;
+}
+
+.register-container {
+  min-height: 100%;
+  padding: 28px 20px 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+.top-area {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 58px;
+}
+
+.back-button {
+  position: absolute;
+  left: -10px;
+  --color: #ff5a00;
+  font-size: 20px;
+}
+
+.title-pill {
+  background: #9f9f9f;
+  color: #111111;
+  padding: 8px 28px;
+  border-radius: 14px;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.form-area {
+  ion-label {
+    display: block;
+    color: #222222;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    margin-top: 18px;
+  }
+}
+
+.custom-input {
+  --background: #a6a6a6;
+  --color: #ffffff;
+  --placeholder-color: #eeeeee;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  border-radius: 14px;
+  min-height: 46px;
+  font-size: 14px;
+}
+
+.terms-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 28px;
+
+  ion-checkbox {
+    --size: 20px;
+    --checkbox-background-checked: #ff5a00;
+    --border-color-checked: #ff5a00;
+  }
+
+  p {
+    margin: 0;
+    color: #222222;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  span {
+    color: #ff5a00;
+  }
+}
+
+.main-button {
+  --background: #9f9f9f;
+  --background-activated: #8b8b8b;
+  --color: #111111;
+  --border-radius: 14px;
+  height: 44px;
+  font-weight: 700;
+  text-transform: none;
+  margin: auto auto 28px;
+  max-width: 190px;
+}

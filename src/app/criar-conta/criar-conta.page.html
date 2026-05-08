@@ -11,3 +11,61 @@
     </ion-toolbar>
   </ion-header>
 </ion-content>
+<ion-content [fullscreen]="true" class="register-content">
+
+  <div class="register-container">
+
+    <div class="top-area">
+      <ion-button fill="clear" class="back-button" (click)="voltar()">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-button>
+
+      <div class="title-pill">
+        Criar conta
+      </div>
+    </div>
+
+    <div class="form-area">
+
+      <ion-label>Nome completo</ion-label>
+      <ion-input
+        type="text"
+        placeholder="João Silva"
+        class="custom-input">
+      </ion-input>
+
+      <ion-label>Email</ion-label>
+      <ion-input
+        type="email"
+        placeholder="exemplo@gmail.com"
+        class="custom-input">
+      </ion-input>
+
+      <ion-label>Palavra-passe</ion-label>
+      <ion-input
+        type="password"
+        placeholder="********"
+        class="custom-input">
+      </ion-input>
+
+      <ion-label>Confirmar palavra-passe</ion-label>
+      <ion-input
+        type="password"
+        placeholder="********"
+        class="custom-input">
+      </ion-input>
+
+      <div class="terms-area">
+        <ion-checkbox></ion-checkbox>
+        <p>Aceito os <span>termos e condições</span></p>
+      </div>
+
+    </div>
+
+    <ion-button expand="block" class="main-button" (click)="criarConta()">
+      Criar conta
+    </ion-button>
+
+  </div>
+
+</ion-content>

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-criar-conta',
@@ -6,11 +7,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./criar-conta.page.scss'],
   standalone: false
 })
-export class CriarContaPage implements OnInit {
+export class CriarContaPage {
 
-  constructor() { }
+  constructor(private router: Router) {}
 
-  ngOnInit() {
+  // Volta para o ecrã de login
+  public voltar(): void {
+    this.router.navigateByUrl('/login');
   }
 
+  // Simula a criação de conta e entra na app
+  public criarConta(): void {
+    this.router.navigateByUrl('/tabs/pesquisar');
+  }
 }

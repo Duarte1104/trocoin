@@ -1,0 +1,78 @@
+.login-content {
+  --background: #ffffff;
+}
+
+.login-container {
+  min-height: 100%;
+  padding: 56px 24px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.logo-area {
+  text-align: center;
+  margin-top: 16px;
+
+  h1 {
+    color: #ff5a00;
+    font-size: 30px;
+    font-weight: 800;
+    margin-bottom: 12px;
+  }
+
+  p {
+    color: #222222;
+    font-size: 14px;
+    font-weight: 600;
+  }
+}
+
+.form-area {
+  margin-top: 40px;
+
+  ion-label {
+    display: block;
+    color: #222222;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    margin-top: 22px;
+  }
+}
+
+.custom-input {
+  --background: #a6a6a6;
+  --color: #ffffff;
+  --placeholder-color: #eeeeee;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  border-radius: 14px;
+  min-height: 46px;
+  font-size: 14px;
+}
+
+.actions-area {
+  margin-bottom: 48px;
+}
+
+.main-button,
+.secondary-button {
+  --background: #9f9f9f;
+  --background-activated: #8b8b8b;
+  --color: #111111;
+  --border-radius: 14px;
+  height: 44px;
+  font-weight: 700;
+  text-transform: none;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 190px;
+}
+
+.separator {
+  text-align: center;
+  color: #a6a6a6;
+  font-size: 13px;
+  margin: 22px 0;
+}
