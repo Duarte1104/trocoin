@@ -1,1 +1,33 @@
 
+ion-tab-bar {
+  --background: #ffffff;
+  border-top: 1px solid #eeeeee;
+  height: 62px;
+}
+
+ion-tab-button {
+  --color: #9b9b9b;
+  --color-selected: #ff5a00;
+  font-size: 11px;
+}
+
+ion-icon {
+  font-size: 20px;
+}
+
+.tab-publicar {
+  --color: #ffffff;
+  --color-selected: #ffffff;
+  background: #ff5a00;
+  border-radius: 50%;
+  max-width: 46px;
+  height: 46px;
+  margin-bottom: 12px;
+  margin-left: 6px;
+  margin-right: 6px;
+}
+
+.tab-publicar ion-icon {
+  font-size: 26px;
+  color: #ffffff;
+}
