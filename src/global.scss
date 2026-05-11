@@ -35,3 +35,124 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
+
+
+/* ==============================
+   Trocoin - Estilos globais
+   ============================== */
+
+* {
+  box-sizing: border-box;
+}
+
+ion-content {
+  --background: var(--trocoin-background);
+}
+
+ion-toolbar {
+  --background: var(--trocoin-background);
+  --color: var(--trocoin-text);
+}
+
+ion-title {
+  font-weight: 800;
+}
+
+ion-button {
+  text-transform: none;
+  font-weight: 800;
+}
+
+ion-card {
+  border-radius: 18px;
+  box-shadow: none;
+}
+
+ion-input,
+ion-textarea,
+ion-select,
+ion-searchbar {
+  font-size: 14px;
+}
+
+ion-tab-bar {
+  --background: var(--trocoin-background);
+  border-top: 1px solid var(--trocoin-border);
+}
+
+ion-tab-button {
+  --color: #999999;
+  --color-selected: var(--ion-color-trocoin);
+}
+
+.trocoin-page-title {
+  color: var(--ion-color-trocoin);
+  font-size: 28px;
+  font-weight: 900;
+  margin: 0;
+}
+
+.trocoin-page-subtitle {
+  color: var(--trocoin-muted);
+  font-size: 13px;
+  font-weight: 600;
+  margin: 4px 0 0;
+}
+
+.trocoin-card {
+  background: var(--trocoin-card);
+  border-radius: 20px;
+  padding: 14px;
+}
+
+.trocoin-soft-card {
+  background: var(--trocoin-soft);
+  border-radius: 20px;
+  padding: 14px;
+}
+
+.trocoin-main-button {
+  --background: var(--ion-color-trocoin);
+  --color: #ffffff;
+  --border-radius: 15px;
+  height: 46px;
+  text-transform: none;
+  font-weight: 900;
+}
+
+.trocoin-outline-button {
+  --border-color: var(--ion-color-trocoin);
+  --color: var(--ion-color-trocoin);
+  --border-radius: 15px;
+  height: 46px;
+  text-transform: none;
+  font-weight: 900;
+}
+
+.trocoin-empty-state {
+  min-height: 60vh;
+  padding: 32px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.trocoin-empty-state ion-icon {
+  color: var(--ion-color-trocoin);
+  font-size: 52px;
+  margin: 0 auto 12px;
+}
+
+.trocoin-empty-state h2 {
+  color: var(--trocoin-text);
+  font-size: 20px;
+  font-weight: 900;
+  margin: 0 0 8px;
+}
+
+.trocoin-empty-state p {
+  color: var(--trocoin-muted);
+  font-size: 14px;
+  line-height: 1.4;
+}

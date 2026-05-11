@@ -1,13 +1,12 @@
-
 ion-tab-bar {
-  --background: #ffffff;
-  border-top: 1px solid #eeeeee;
+  --background: var(--trocoin-background);
+  border-top: 1px solid var(--trocoin-border);
   height: 62px;
 }
 
 ion-tab-button {
   --color: #9b9b9b;
-  --color-selected: #ff5a00;
+  --color-selected: var(--ion-color-trocoin);
   font-size: 11px;
 }
 
@@ -18,13 +17,14 @@ ion-icon {
 .tab-publicar {
   --color: #ffffff;
   --color-selected: #ffffff;
-  background: #ff5a00;
+  background: var(--ion-color-trocoin);
   border-radius: 50%;
   max-width: 46px;
   height: 46px;
   margin-bottom: 12px;
   margin-left: 6px;
   margin-right: 6px;
+  box-shadow: 0 6px 14px rgba(255, 90, 0, 0.35);
 }
 
 .tab-publicar ion-icon {

@@ -1,2 +1,48 @@
 // For information on how to create your own theme, please refer to:
 // https://ionicframework.com/docs/theming/
+
+/* ==============================
+   Trocoin - Cores globais da app
+   ============================== */
+
+:root {
+  --ion-color-trocoin: #ff5a00;
+  --ion-color-trocoin-rgb: 255, 90, 0;
+  --ion-color-trocoin-contrast: #ffffff;
+  --ion-color-trocoin-contrast-rgb: 255, 255, 255;
+  --ion-color-trocoin-shade: #e04f00;
+  --ion-color-trocoin-tint: #ff6b1a;
+
+  --ion-color-trocoin-dark: #222222;
+  --ion-color-trocoin-dark-rgb: 34, 34, 34;
+  --ion-color-trocoin-dark-contrast: #ffffff;
+  --ion-color-trocoin-dark-contrast-rgb: 255, 255, 255;
+  --ion-color-trocoin-dark-shade: #1e1e1e;
+  --ion-color-trocoin-dark-tint: #383838;
+
+  --trocoin-background: #ffffff;
+  --trocoin-card: #f5f5f5;
+  --trocoin-soft: #fff1e8;
+  --trocoin-coin-bg: #ded6c3;
+  --trocoin-text: #222222;
+  --trocoin-muted: #777777;
+  --trocoin-border: #eeeeee;
+}
+
+.ion-color-trocoin {
+  --ion-color-base: var(--ion-color-trocoin);
+  --ion-color-base-rgb: var(--ion-color-trocoin-rgb);
+  --ion-color-contrast: var(--ion-color-trocoin-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-trocoin-contrast-rgb);
+  --ion-color-shade: var(--ion-color-trocoin-shade);
+  --ion-color-tint: var(--ion-color-trocoin-tint);
+}
+
+.ion-color-trocoin-dark {
+  --ion-color-base: var(--ion-color-trocoin-dark);
+  --ion-color-base-rgb: var(--ion-color-trocoin-dark-rgb);
+  --ion-color-contrast: var(--ion-color-trocoin-dark-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-trocoin-dark-contrast-rgb);
+  --ion-color-shade: var(--ion-color-trocoin-dark-shade);
+  --ion-color-tint: var(--ion-color-trocoin-dark-tint);
+}
