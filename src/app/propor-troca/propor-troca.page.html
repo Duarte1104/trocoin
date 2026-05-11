@@ -1,13 +1,79 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>propor-troca</ion-title>
+    <ion-buttons slot="start">
+      <ion-button fill="clear" (click)="voltar()">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title>Propor troca</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">propor-troca</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="page-content">
+
+  <div class="loading-area" *ngIf="carregando">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>A carregar anúncio...</p>
+  </div>
+
+  <div class="empty-state" *ngIf="!carregando && !anuncio">
+    <ion-icon name="alert-circle-outline"></ion-icon>
+    <h2>Anúncio não encontrado</h2>
+    <p>Não foi possível carregar os dados da proposta.</p>
+  </div>
+
+  <div class="proposal-wrapper" *ngIf="!carregando && anuncio as a">
+
+    <div class="anuncio-card">
+      <img [src]="obterImagemPrincipal()" [alt]="a.titulo">
+
+      <div>
+        <h2>{{ a.titulo }}</h2>
+        <p>{{ formatarPreco(a.preco) }}</p>
+        <span>{{ vendedor?.nome }}</span>
+      </div>
+    </div>
+
+    <div class="form-card">
+
+      <ion-label>Moeda que pretendes oferecer</ion-label>
+      <ion-input
+        type="text"
+        [(ngModel)]="moedaOferecida"
+        placeholder="Ex: 2€ Alemanha 2014">
+      </ion-input>
+
+      <ion-label>Estado da tua moeda</ion-label>
+      <ion-select
+        [(ngModel)]="estadoMoeda"
+        interface="popover">
+        <ion-select-option value="Excelente">Excelente</ion-select-option>
+        <ion-select-option value="Muito Bom">Muito Bom</ion-select-option>
+        <ion-select-option value="Bom">Bom</ion-select-option>
+        <ion-select-option value="Razoável">Razoável</ion-select-option>
+      </ion-select>
+
+      <ion-label>Mensagem ao vendedor</ion-label>
+      <ion-textarea
+        rows="4"
+        [(ngModel)]="descricaoTroca"
+        placeholder="Ex: A moeda está bem conservada e posso enviar fotos por mensagem.">
+      </ion-textarea>
+
+    </div>
+
+    <div class="info-card">
+      <ion-icon name="swap-horizontal-outline"></ion-icon>
+      <p>
+        A tua proposta de troca será enviada para a conversa com o vendedor.
+      </p>
+    </div>
+
+    <ion-button expand="block" class="main-button" (click)="enviarPropostaTroca()">
+      Enviar proposta de troca
+    </ion-button>
+
+  </div>
+
 </ion-content>

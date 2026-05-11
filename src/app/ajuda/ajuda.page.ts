@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ajuda',
@@ -6,11 +7,23 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./ajuda.page.scss'],
   standalone: false
 })
-export class AjudaPage implements OnInit {
+export class AjudaPage {
 
-  constructor() { }
+  constructor(private router: Router) {}
 
-  ngOnInit() {
+  public voltar(): void {
+    this.router.navigateByUrl('/tabs/pesquisar');
   }
 
+  public irPesquisar(): void {
+    this.router.navigateByUrl('/tabs/pesquisar');
+  }
+
+  public irPublicar(): void {
+    this.router.navigateByUrl('/tabs/novo-anuncio');
+  }
+
+  public irMensagens(): void {
+    this.router.navigateByUrl('/tabs/mensagens');
+  }
 }

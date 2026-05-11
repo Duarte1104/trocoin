@@ -1,13 +1,92 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>conversa</ion-title>
+    <ion-buttons slot="start">
+      <ion-button fill="clear" (click)="voltar()">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title>{{ obterNomeTopo() }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">conversa</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="page-content">
+
+  <div class="loading-area" *ngIf="carregando">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>A carregar conversa...</p>
+  </div>
+
+  <div class="empty-state" *ngIf="!carregando && !conversa">
+    <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+    <h2>Conversa não encontrada</h2>
+    <p>Não foi possível carregar esta conversa.</p>
+  </div>
+
+  <div class="conversation-wrapper" *ngIf="!carregando && conversa">
+
+    <div class="anuncio-preview" *ngIf="anuncio" (click)="abrirDetalheAnuncio()">
+      <img [src]="obterImagemAnuncio()" [alt]="anuncio.titulo">
+
+      <div class="anuncio-info">
+        <h2>{{ anuncio.titulo }}</h2>
+        <p>{{ formatarPreco(anuncio.preco) }}</p>
+        <span>Ver anúncio</span>
+      </div>
+
+      <ion-icon name="chevron-forward-outline"></ion-icon>
+    </div>
+
+    <div class="proposal-actions">
+      <ion-button size="small" class="buy-button" (click)="proporCompra()">
+        <ion-icon name="card-outline" slot="start"></ion-icon>
+        Compra
+      </ion-button>
+
+      <ion-button size="small" class="trade-button" (click)="proporTroca()">
+        <ion-icon name="swap-horizontal-outline" slot="start"></ion-icon>
+        Troca
+      </ion-button>
+    </div>
+
+    <div class="messages-area">
+
+      <div
+        class="message-row"
+        *ngFor="let mensagem of mensagens"
+        [class.mine]="mensagemDoUtilizador(mensagem)"
+        [class.theirs]="!mensagemDoUtilizador(mensagem)">
+
+        <div class="message-bubble" [class.proposal]="mensagem.tipo !== 'texto'">
+          <p>{{ mensagem.texto }}</p>
+          <span>{{ mensagem.data }}</span>
+        </div>
+
+      </div>
+
+      <div class="no-messages" *ngIf="mensagens.length === 0">
+        <ion-icon name="chatbubble-outline"></ion-icon>
+        <p>Ainda não existem mensagens nesta conversa.</p>
+        <small>Envia uma mensagem para iniciar a negociação.</small>
+      </div>
+
+    </div>
+
+  </div>
+
 </ion-content>
+
+<ion-footer *ngIf="!carregando && conversa">
+  <div class="input-area">
+    <ion-textarea
+      autoGrow="true"
+      rows="1"
+      placeholder="Escreve uma mensagem..."
+      [(ngModel)]="novaMensagem">
+    </ion-textarea>
+
+    <ion-button class="send-button" (click)="enviarMensagem()">
+      <ion-icon name="send"></ion-icon>
+    </ion-button>
+  </div>
+</ion-footer>

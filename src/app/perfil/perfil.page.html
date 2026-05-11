@@ -1,13 +1,102 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>perfil</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true" class="page-content">
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">perfil</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="top-bar">
+    <div>
+      <h1>Profile</h1>
+      <p>Conta, anúncios e preferências</p>
+    </div>
+
+    <ion-icon name="person-circle-outline"></ion-icon>
+  </div>
+
+  <div class="loading-area" *ngIf="carregando">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>A carregar perfil...</p>
+  </div>
+
+  <div class="profile-wrapper" *ngIf="!carregando">
+
+    <div class="profile-card" *ngIf="utilizador">
+      <div class="avatar">
+        {{ obterAvatar() }}
+      </div>
+
+      <div class="profile-info">
+        <h2>{{ utilizador.nome }}</h2>
+        <p>@{{ utilizador.username }}</p>
+        <span>★★★★★ {{ utilizador.avaliacao || 5 }}/5</span>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <strong>{{ meusAnuncios.length }}</strong>
+        <span>Anúncios</span>
+      </div>
+
+      <div class="stat-card">
+        <strong>5</strong>
+        <span>Avaliação</span>
+      </div>
+
+      <div class="stat-card">
+        <strong>PT</strong>
+        <span>País</span>
+      </div>
+    </div>
+
+    <div class="actions-card">
+      <ion-button expand="block" class="main-button" (click)="publicarNovoAnuncio()">
+        <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+        Publicar novo anúncio
+      </ion-button>
+
+      <ion-button expand="block" fill="outline" class="outline-button" (click)="abrirAjuda()">
+        <ion-icon name="help-circle-outline" slot="start"></ion-icon>
+        Ajuda
+      </ion-button>
+
+      <ion-button expand="block" fill="clear" class="clear-button" (click)="confirmarLimparDados()">
+        <ion-icon name="trash-outline" slot="start"></ion-icon>
+        Limpar dados locais
+      </ion-button>
+    </div>
+
+    <div class="section-title">
+      <h2>Os meus anúncios</h2>
+      <p>Anúncios criados por ti nesta app</p>
+    </div>
+
+    <div class="my-ads-list" *ngIf="meusAnuncios.length > 0">
+
+      <div
+        class="ad-card"
+        *ngFor="let anuncio of meusAnuncios"
+        (click)="abrirAnuncio(anuncio.id)">
+
+        <img [src]="obterImagemPrincipal(anuncio)" [alt]="anuncio.titulo">
+
+        <div class="ad-info">
+          <h3>{{ anuncio.titulo }}</h3>
+          <p>{{ formatarPreco(anuncio.preco) }}</p>
+          <span>{{ anuncio.estadoConservacao }} · {{ anuncio.tipo }}</span>
+        </div>
+
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </div>
+
+    </div>
+
+    <div class="empty-ads" *ngIf="meusAnuncios.length === 0">
+      <ion-icon name="albums-outline"></ion-icon>
+      <h2>Ainda não publicaste anúncios</h2>
+      <p>Publica uma moeda para vender ou trocar com outros colecionadores.</p>
+
+      <ion-button (click)="publicarNovoAnuncio()">
+        Publicar anúncio
+      </ion-button>
+    </div>
+
+  </div>
+
 </ion-content>

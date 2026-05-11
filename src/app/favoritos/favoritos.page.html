@@ -1,13 +1,72 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>favoritos</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true" class="page-content">
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">favoritos</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="top-bar">
+    <div>
+      <h1>Favoritos</h1>
+      <p>Moedas guardadas para veres mais tarde</p>
+    </div>
+
+    <ion-icon name="heart-outline"></ion-icon>
+  </div>
+
+  <div class="loading-area" *ngIf="carregando">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>A carregar favoritos...</p>
+  </div>
+
+  <div class="favorites-list" *ngIf="!carregando && favoritos.length > 0">
+
+    <div
+      class="favorite-card"
+      *ngFor="let anuncio of favoritos"
+      (click)="abrirDetalhe(anuncio.id)">
+
+      <div class="image-area">
+        <img [src]="obterImagemPrincipal(anuncio)" [alt]="anuncio.titulo">
+      </div>
+
+      <div class="favorite-info">
+        <div class="title-row">
+          <h2>{{ anuncio.titulo }}</h2>
+
+          <ion-button
+            fill="clear"
+            class="remove-button"
+            (click)="removerFavorito($event, anuncio.id)">
+            <ion-icon name="heart"></ion-icon>
+          </ion-button>
+        </div>
+
+        <p class="seller">
+          @{{ anuncio.vendedor?.username || 'utilizador' }}
+        </p>
+
+        <p class="price">
+          {{ formatarPreco(anuncio.preco) }}
+        </p>
+
+        <div class="meta-row">
+          <span>{{ anuncio.estadoConservacao }}</span>
+          <span>{{ anuncio.localizacao }}</span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="empty-state" *ngIf="!carregando && favoritos.length === 0">
+    <ion-icon name="heart-outline"></ion-icon>
+
+    <h2>Ainda não tens favoritos</h2>
+
+    <p>
+      Guarda anúncios com o coração para os encontrares rapidamente mais tarde.
+    </p>
+
+    <ion-button (click)="irPesquisar()">
+      Procurar moedas
+    </ion-button>
+  </div>
+
 </ion-content>

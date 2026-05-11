@@ -1,13 +1,62 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>compra-realizada</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true" class="page-content">
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">compra-realizada</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="loading-area" *ngIf="carregando">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>A confirmar proposta...</p>
+  </div>
+
+  <div class="success-wrapper" *ngIf="!carregando">
+
+    <div class="success-icon">
+      <ion-icon name="checkmark-outline"></ion-icon>
+    </div>
+
+    <h1>Proposta enviada!</h1>
+
+    <p class="subtitle">
+      A tua proposta de compra foi enviada ao vendedor através da conversa.
+    </p>
+
+    <div class="anuncio-card" *ngIf="anuncio">
+      <img [src]="obterImagemPrincipal()" [alt]="anuncio.titulo">
+
+      <div>
+        <h2>{{ anuncio.titulo }}</h2>
+        <p>Agora podes acompanhar a resposta na Inbox.</p>
+      </div>
+    </div>
+
+    <div class="next-steps">
+      <h3>Próximos passos</h3>
+
+      <div class="step">
+        <span>1</span>
+        <p>O vendedor recebe a tua proposta.</p>
+      </div>
+
+      <div class="step">
+        <span>2</span>
+        <p>Podem combinar pagamento e envio por mensagem.</p>
+      </div>
+
+      <div class="step">
+        <span>3</span>
+        <p>Quando houver acordo, a compra fica combinada.</p>
+      </div>
+    </div>
+
+    <ion-button expand="block" class="main-button" (click)="abrirConversa()">
+      Abrir conversa
+    </ion-button>
+
+    <ion-button expand="block" fill="outline" class="secondary-button" (click)="irInbox()">
+      Ir para Inbox
+    </ion-button>
+
+    <ion-button expand="block" fill="clear" class="clear-button" (click)="voltarPesquisar()">
+      Voltar à pesquisa
+    </ion-button>
+
+  </div>
+
 </ion-content>

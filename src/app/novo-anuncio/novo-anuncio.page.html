@@ -1,13 +1,120 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>novo-anuncio</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true" class="page-content">
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">novo-anuncio</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="top-bar">
+    <div>
+      <h1>Publicar</h1>
+      <p>Cria um anúncio para vender ou trocar uma moeda</p>
+    </div>
+
+    <ion-icon name="add-circle-outline"></ion-icon>
+  </div>
+
+  <div class="form-wrapper">
+
+    <input
+  #fileInput
+  type="file"
+  accept="image/*"
+  hidden
+  (change)="selecionarImagemFicheiro($event)">
+
+<div class="photo-card" (click)="abrirSeletorFicheiro(fileInput)">
+
+  <div class="photo-placeholder" *ngIf="!imagemSelecionada">
+    <ion-icon name="camera-outline"></ion-icon>
+    <h2>Adicionar foto</h2>
+    <p>Tira uma foto ou escolhe da galeria</p>
+  </div>
+
+  <img
+    *ngIf="imagemSelecionada"
+    [src]="imagemSelecionada"
+    alt="Foto da moeda">
+
+</div>
+
+<ion-button expand="block" fill="outline" class="photo-button" (click)="abrirSeletorFicheiro(fileInput)">
+  <ion-icon name="image-outline" slot="start"></ion-icon>
+  Escolher do computador
+</ion-button>
+
+<ion-button expand="block" fill="outline" class="photo-button" (click)="escolherImagem()">
+  <ion-icon name="camera-outline" slot="start"></ion-icon>
+  Câmara / Galeria do telemóvel
+</ion-button>
+
+    <ion-button expand="block" fill="outline" class="photo-button" (click)="escolherImagem()">
+      <ion-icon name="camera-outline" slot="start"></ion-icon>
+      Escolher imagem
+    </ion-button>
+
+    <div class="form-card">
+
+      <ion-label>Título do anúncio</ion-label>
+      <ion-input
+        type="text"
+        [(ngModel)]="titulo"
+        placeholder="Ex: 1 Euro Espanha 1988">
+      </ion-input>
+
+      <ion-label>Descrição</ion-label>
+      <ion-textarea
+        rows="4"
+        [(ngModel)]="descricao"
+        placeholder="Descreve o estado, ano, origem e detalhes da moeda.">
+      </ion-textarea>
+
+      <ion-label>Preço</ion-label>
+      <ion-input
+        type="number"
+        [(ngModel)]="preco"
+        placeholder="Ex: 15">
+      </ion-input>
+
+      <ion-label>Tipo de anúncio</ion-label>
+      <ion-select
+        [(ngModel)]="tipo"
+        interface="popover">
+        <ion-select-option value="venda">Venda</ion-select-option>
+        <ion-select-option value="troca">Troca</ion-select-option>
+        <ion-select-option value="venda-troca">Venda ou troca</ion-select-option>
+      </ion-select>
+
+      <ion-label>Estado de conservação</ion-label>
+      <ion-select
+        [(ngModel)]="estadoConservacao"
+        interface="popover">
+        <ion-select-option value="Excelente">Excelente</ion-select-option>
+        <ion-select-option value="Muito Bom">Muito Bom</ion-select-option>
+        <ion-select-option value="Bom">Bom</ion-select-option>
+        <ion-select-option value="Razoável">Razoável</ion-select-option>
+        <ion-select-option value="Mau">Mau</ion-select-option>
+      </ion-select>
+
+      <ion-label>Localização</ion-label>
+      <ion-input
+        type="text"
+        [(ngModel)]="localizacao"
+        placeholder="Ex: Viana do Castelo, Portugal">
+      </ion-input>
+
+    </div>
+
+    <div class="info-card">
+      <ion-icon name="information-circle-outline"></ion-icon>
+      <p>
+        O anúncio será guardado localmente no telemóvel através do Ionic Storage.
+      </p>
+    </div>
+
+    <ion-button expand="block" class="main-button" (click)="publicarAnuncio()">
+      Publicar anúncio
+    </ion-button>
+
+    <ion-button expand="block" fill="clear" class="clear-button" (click)="limparFormulario()">
+      Limpar formulário
+    </ion-button>
+
+  </div>
+
 </ion-content>

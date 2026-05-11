@@ -1,0 +1,251 @@
+ion-toolbar {
+  --background: #ffffff;
+  --color: #222222;
+}
+
+ion-title {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+ion-toolbar ion-button {
+  --color: #ff5a00;
+}
+
+.page-content {
+  --background: #ffffff;
+}
+
+.loading-area,
+.empty-state {
+  min-height: 70vh;
+  padding: 32px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  ion-icon {
+    color: #ff5a00;
+    font-size: 52px;
+    margin: 0 auto 12px;
+  }
+
+  ion-spinner {
+    color: #ff5a00;
+    margin: 0 auto 12px;
+  }
+
+  h2 {
+    color: #222222;
+    font-size: 20px;
+    margin: 0 0 8px;
+  }
+
+  p {
+    color: #777777;
+    font-size: 14px;
+  }
+}
+
+.conversation-wrapper {
+  padding: 12px 14px 95px;
+}
+
+.anuncio-preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f5f5f5;
+  border-radius: 18px;
+  padding: 10px;
+  margin-bottom: 12px;
+
+  img {
+    width: 58px;
+    height: 58px;
+    object-fit: contain;
+    background: #ded6c3;
+    border-radius: 14px;
+    padding: 6px;
+  }
+
+  ion-icon {
+    color: #999999;
+    font-size: 18px;
+  }
+}
+
+.anuncio-info {
+  flex: 1;
+
+  h2 {
+    color: #222222;
+    font-size: 14px;
+    font-weight: 800;
+    margin: 0 0 4px;
+  }
+
+  p {
+    color: #111111;
+    font-size: 14px;
+    font-weight: 900;
+    margin: 0;
+  }
+
+  span {
+    color: #ff5a00;
+    font-size: 12px;
+    font-weight: 700;
+  }
+}
+
+.proposal-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+
+  ion-button {
+    --border-radius: 14px;
+    text-transform: none;
+    font-weight: 800;
+    height: 38px;
+  }
+}
+
+.buy-button {
+  --background: #ff5a00;
+  --color: #ffffff;
+}
+
+.trade-button {
+  --background: #222222;
+  --color: #ffffff;
+}
+
+.messages-area {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.message-row {
+  display: flex;
+  width: 100%;
+
+  &.mine {
+    justify-content: flex-end;
+
+    .message-bubble {
+      background: #ff5a00;
+      color: #ffffff;
+      border-radius: 18px 18px 4px 18px;
+
+      span {
+        color: rgba(255, 255, 255, 0.75);
+      }
+    }
+  }
+
+  &.theirs {
+    justify-content: flex-start;
+
+    .message-bubble {
+      background: #f0f0f0;
+      color: #222222;
+      border-radius: 18px 18px 18px 4px;
+
+      span {
+        color: #888888;
+      }
+    }
+  }
+}
+
+.message-bubble {
+  max-width: 76%;
+  padding: 10px 12px;
+
+  p {
+    font-size: 14px;
+    line-height: 1.35;
+    margin: 0 0 4px;
+  }
+
+  span {
+    display: block;
+    font-size: 10px;
+    text-align: right;
+  }
+
+  &.proposal {
+    border: 2px solid #222222;
+  }
+}
+
+.no-messages {
+  min-height: 35vh;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  ion-icon {
+    color: #ff5a00;
+    font-size: 42px;
+    margin: 0 auto 10px;
+  }
+
+  p {
+    color: #222222;
+    font-size: 15px;
+    font-weight: 800;
+    margin: 0 0 4px;
+  }
+
+  small {
+    color: #777777;
+    font-size: 12px;
+  }
+}
+
+ion-footer {
+  background: #ffffff;
+  border-top: 1px solid #eeeeee;
+}
+
+.input-area {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 10px 12px 14px;
+  background: #ffffff;
+
+  ion-textarea {
+    --background: #f1f1f1;
+    --color: #222222;
+    --placeholder-color: #888888;
+    --padding-start: 14px;
+    --padding-end: 14px;
+    --padding-top: 10px;
+    --padding-bottom: 10px;
+    border-radius: 18px;
+    font-size: 14px;
+    max-height: 90px;
+  }
+}
+
+.send-button {
+  width: 44px;
+  height: 44px;
+  --border-radius: 50%;
+  --background: #ff5a00;
+  --color: #ffffff;
+  --padding-start: 0;
+  --padding-end: 0;
+
+  ion-icon {
+    font-size: 18px;
+  }
+}

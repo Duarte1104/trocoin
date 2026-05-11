@@ -1,13 +1,149 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>ajuda</ion-title>
+    <ion-buttons slot="start">
+      <ion-button fill="clear" (click)="voltar()">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title>Ajuda</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">ajuda</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="page-content">
+
+  <div class="help-wrapper">
+
+    <div class="intro-card">
+      <div class="icon-circle">
+        <ion-icon name="help-circle-outline"></ion-icon>
+      </div>
+
+      <h1>Como usar a Trocoin?</h1>
+
+      <p>
+        A Trocoin é uma aplicação mobile para colecionadores de moedas,
+        onde podes procurar moedas, publicar anúncios e negociar compras ou trocas.
+      </p>
+    </div>
+
+    <div class="tasks-card">
+      <h2>Principais tarefas</h2>
+
+      <div class="task-item" (click)="irPesquisar()">
+        <div class="task-icon">
+          <ion-icon name="search-outline"></ion-icon>
+        </div>
+
+        <div>
+          <h3>Procurar moedas</h3>
+          <p>Usa a barra de pesquisa para encontrar anúncios por nome, estado ou localização.</p>
+        </div>
+
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </div>
+
+      <div class="task-item" (click)="irPublicar()">
+        <div class="task-icon">
+          <ion-icon name="camera-outline"></ion-icon>
+        </div>
+
+        <div>
+          <h3>Publicar anúncio</h3>
+          <p>Adiciona uma foto, descrição, preço e tipo de anúncio: venda, troca ou ambos.</p>
+        </div>
+
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </div>
+
+      <div class="task-item" (click)="irMensagens()">
+        <div class="task-icon">
+          <ion-icon name="chatbubble-outline"></ion-icon>
+        </div>
+
+        <div>
+          <h3>Negociar</h3>
+          <p>Envia mensagens ao vendedor e propõe uma compra ou troca diretamente na app.</p>
+        </div>
+
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </div>
+    </div>
+
+    <div class="faq-card">
+      <h2>Perguntas frequentes</h2>
+
+      <ion-accordion-group>
+
+        <ion-accordion value="pesquisa">
+          <ion-item slot="header">
+            <ion-label>Como procuro uma moeda?</ion-label>
+          </ion-item>
+
+          <div class="accordion-content" slot="content">
+            Na página Search, escreve o nome da moeda, país, estado de conservação
+            ou localização. A lista de anúncios é filtrada automaticamente.
+          </div>
+        </ion-accordion>
+
+        <ion-accordion value="publicar">
+          <ion-item slot="header">
+            <ion-label>Como publico um anúncio?</ion-label>
+          </ion-item>
+
+          <div class="accordion-content" slot="content">
+            Na tab central, adiciona uma foto da moeda, escreve o título,
+            descrição, preço, estado de conservação e localização. Depois carrega em publicar.
+          </div>
+        </ion-accordion>
+
+        <ion-accordion value="favoritos">
+          <ion-item slot="header">
+            <ion-label>Como guardo favoritos?</ion-label>
+          </ion-item>
+
+          <div class="accordion-content" slot="content">
+            Carrega no coração de um anúncio. Esse anúncio passa a aparecer na tab Favoritos.
+          </div>
+        </ion-accordion>
+
+        <ion-accordion value="mensagens">
+          <ion-item slot="header">
+            <ion-label>Como negocio uma moeda?</ion-label>
+          </ion-item>
+
+          <div class="accordion-content" slot="content">
+            Abre um anúncio e escolhe enviar mensagem, propor compra ou propor troca.
+            A negociação fica registada na Inbox.
+          </div>
+        </ion-accordion>
+
+        <ion-accordion value="dados">
+          <ion-item slot="header">
+            <ion-label>Onde ficam guardados os dados?</ion-label>
+          </ion-item>
+
+          <div class="accordion-content" slot="content">
+            Os anúncios criados, favoritos e mensagens ficam guardados localmente
+            no dispositivo através do Ionic Storage.
+          </div>
+        </ion-accordion>
+
+      </ion-accordion-group>
+    </div>
+
+    <div class="support-card">
+      <ion-icon name="mail-outline"></ion-icon>
+
+      <div>
+        <h2>Suporte</h2>
+        <p>
+          Caso aconteça algum problema numa compra, troca ou anúncio,
+          o utilizador pode contactar a equipa de suporte da Trocoin.
+        </p>
+      </div>
+    </div>
+
+  </div>
+
 </ion-content>

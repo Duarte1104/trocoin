@@ -1,13 +1,100 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>pesquisar</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true" class="page-content">
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">pesquisar</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="top-bar">
+    <h1>Trocoin</h1>
+
+    <div class="top-actions">
+      <span>Explorar</span>
+      <ion-button fill="clear" size="small" (click)="abrirAjuda()">
+        <ion-icon name="help-circle-outline"></ion-icon>
+      </ion-button>
+    </div>
+  </div>
+
+  <div class="search-area">
+    <ion-searchbar
+      placeholder="Pesquisar moeda, país, estado..."
+      [value]="termoPesquisa"
+      debounce="250"
+      (ionInput)="pesquisar($event)">
+    </ion-searchbar>
+  </div>
+
+  <div class="filters-area">
+    <ion-chip color="medium">
+      <ion-label>Todos</ion-label>
+    </ion-chip>
+
+    <ion-chip color="medium">
+      <ion-label>Ano</ion-label>
+      <ion-icon name="chevron-down-outline"></ion-icon>
+    </ion-chip>
+
+    <ion-chip color="medium">
+      <ion-label>Estado</ion-label>
+      <ion-icon name="chevron-down-outline"></ion-icon>
+    </ion-chip>
+
+    <ion-chip color="medium">
+      <ion-label>Preço</ion-label>
+      <ion-icon name="chevron-down-outline"></ion-icon>
+    </ion-chip>
+  </div>
+
+  <p class="results-count">
+    {{ anunciosFiltrados.length }} resultado(s)
+  </p>
+
+  <div class="grid-anuncios" *ngIf="anunciosFiltrados.length > 0">
+
+    <ion-card
+      class="anuncio-card"
+      *ngFor="let anuncio of anunciosFiltrados"
+      (click)="abrirDetalhe(anuncio.id)">
+
+      <div class="image-area">
+        <img [src]="obterImagemPrincipal(anuncio)" [alt]="anuncio.titulo">
+
+        <ion-button
+          fill="clear"
+          class="favorite-button"
+          (click)="alternarFavorito($event, anuncio.id)">
+          <ion-icon
+            [name]="anuncio.favorito ? 'heart' : 'heart-outline'">
+          </ion-icon>
+        </ion-button>
+      </div>
+
+      <ion-card-content>
+
+        <div class="seller-row">
+          <div class="avatar">
+            {{ anuncio.vendedor?.avatar || anuncio.vendedor?.nome?.charAt(0) || 'U' }}
+          </div>
+
+          <div>
+            <p class="username">{{ anuncio.vendedor?.username }}</p>
+            <div class="stars">★★★★★</div>
+          </div>
+        </div>
+
+        <h2>{{ formatarPreco(anuncio.preco) }}</h2>
+        <h3>{{ anuncio.estadoConservacao }}</h3>
+        <p class="title">{{ anuncio.titulo }}</p>
+
+      </ion-card-content>
+    </ion-card>
+
+  </div>
+
+  <div class="empty-state" *ngIf="anunciosFiltrados.length === 0">
+    <ion-icon name="search-outline"></ion-icon>
+    <h2>Nenhum anúncio encontrado</h2>
+    <p>Tenta pesquisar por outro nome, país ou estado.</p>
+
+    <ion-button fill="clear" (click)="limparPesquisa()">
+      Limpar pesquisa
+    </ion-button>
+  </div>
+
 </ion-content>

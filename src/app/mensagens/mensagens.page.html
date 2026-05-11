@@ -1,13 +1,63 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>mensagens</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true" class="page-content">
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">mensagens</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="top-bar">
+    <div>
+      <h1>Inbox</h1>
+      <p>Mensagens e negociações</p>
+    </div>
+
+    <ion-icon name="mail-outline"></ion-icon>
+  </div>
+
+  <div class="loading-area" *ngIf="carregando">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>A carregar conversas...</p>
+  </div>
+
+  <div class="conversations-list" *ngIf="!carregando && conversas.length > 0">
+
+    <div
+      class="conversation-card"
+      *ngFor="let conversa of conversas"
+      (click)="abrirConversa(conversa.id)">
+
+      <div class="image-area">
+        <img [src]="obterImagemAnuncio(conversa)" [alt]="conversa.anuncio?.titulo || 'Moeda'">
+      </div>
+
+      <div class="conversation-info">
+        <div class="conversation-header">
+          <h2>{{ obterNomeUtilizador(conversa) }}</h2>
+          <span>{{ conversa.horaUltimaMensagem }}</span>
+        </div>
+
+        <p class="username">@{{ obterUsername(conversa) }}</p>
+
+        <p class="message-preview">
+          {{ conversa.ultimaMensagemTexto }}
+        </p>
+
+        <small *ngIf="conversa.anuncio">
+          Sobre: {{ conversa.anuncio.titulo }}
+        </small>
+      </div>
+
+      <div class="badge-area" *ngIf="conversa.mensagensNaoLidas > 0">
+        {{ conversa.mensagensNaoLidas }}
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="empty-state" *ngIf="!carregando && conversas.length === 0">
+    <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+    <h2>Ainda não tens mensagens</h2>
+    <p>Quando contactares um vendedor ou receberes uma proposta, as conversas aparecem aqui.</p>
+
+    <ion-button (click)="abrirPesquisar()">
+      Procurar moedas
+    </ion-button>
+  </div>
+
 </ion-content>

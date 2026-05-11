@@ -1,1 +1,3 @@
 // um service (serviço) é uma CLASSE que tem a particularidade de ser INJETAVEL
+//splice ideia da torta, tirar uma parte do array do meio e atualiza o array, que fica com o novo numero de indice
+//ngOnInit() é imediatamente antes de renderizar o ecrã.

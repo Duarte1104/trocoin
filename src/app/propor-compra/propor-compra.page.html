@@ -1,13 +1,80 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>propor-compra</ion-title>
+    <ion-buttons slot="start">
+      <ion-button fill="clear" (click)="voltar()">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title>Propor compra</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">propor-compra</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="page-content">
+
+  <div class="loading-area" *ngIf="carregando">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>A carregar anúncio...</p>
+  </div>
+
+  <div class="empty-state" *ngIf="!carregando && !anuncio">
+    <ion-icon name="alert-circle-outline"></ion-icon>
+    <h2>Anúncio não encontrado</h2>
+    <p>Não foi possível carregar os dados da proposta.</p>
+  </div>
+
+  <div class="proposal-wrapper" *ngIf="!carregando && anuncio as a">
+
+    <div class="anuncio-card">
+      <img [src]="obterImagemPrincipal()" [alt]="a.titulo">
+
+      <div>
+        <h2>{{ a.titulo }}</h2>
+        <p>{{ formatarPreco(a.preco) }}</p>
+        <span>{{ vendedor?.nome }}</span>
+      </div>
+    </div>
+
+    <div class="form-card">
+
+      <ion-label>Valor proposto</ion-label>
+      <ion-input
+        type="number"
+        [(ngModel)]="valorProposto"
+        placeholder="Valor em euros">
+      </ion-input>
+
+      <ion-label>Método de pagamento</ion-label>
+      <ion-select
+        [(ngModel)]="metodoPagamento"
+        interface="popover"
+        placeholder="Selecionar método">
+        <ion-select-option value="Transferência bancária">Transferência bancária</ion-select-option>
+        <ion-select-option value="MB Way">MB Way</ion-select-option>
+        <ion-select-option value="Pagamento presencial">Pagamento presencial</ion-select-option>
+        <ion-select-option value="A combinar">A combinar</ion-select-option>
+      </ion-select>
+
+      <ion-label>Observações</ion-label>
+      <ion-textarea
+        rows="4"
+        [(ngModel)]="observacoes"
+        placeholder="Ex: Posso pagar hoje e combinar o envio por mensagem.">
+      </ion-textarea>
+
+    </div>
+
+    <div class="info-card">
+      <ion-icon name="information-circle-outline"></ion-icon>
+      <p>
+        Esta proposta será enviada ao vendedor através da conversa da aplicação.
+      </p>
+    </div>
+
+    <ion-button expand="block" class="main-button" (click)="enviarPropostaCompra()">
+      Enviar proposta de compra
+    </ion-button>
+
+  </div>
+
 </ion-content>
