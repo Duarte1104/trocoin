@@ -1,3 +1,14 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button fill="clear" (click)="voltarPesquisar()">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Proposta enviada</ion-title>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content [fullscreen]="true" class="page-content">
 
   <div class="loading-area" *ngIf="carregando">
@@ -19,26 +30,22 @@
 
     <div class="anuncio-card" *ngIf="anuncio">
       <img [src]="obterImagemPrincipal()" [alt]="anuncio.titulo">
-
       <div>
         <h2>{{ anuncio.titulo }}</h2>
-        <p>Agora podes acompanhar a resposta na Inbox.</p>
+        <p>Agora podes acompanhar a resposta nas Mensagens.</p>
       </div>
     </div>
 
     <div class="next-steps">
       <h3>Próximos passos</h3>
-
       <div class="step">
         <span>1</span>
         <p>O vendedor recebe a tua proposta.</p>
       </div>
-
       <div class="step">
         <span>2</span>
         <p>Podem combinar pagamento e envio por mensagem.</p>
       </div>
-
       <div class="step">
         <span>3</span>
         <p>Quando houver acordo, a compra fica combinada.</p>
@@ -50,7 +57,7 @@
     </ion-button>
 
     <ion-button expand="block" fill="outline" class="secondary-button" (click)="irInbox()">
-      Ir para Inbox
+      Ir para Mensagens
     </ion-button>
 
     <ion-button expand="block" fill="clear" class="clear-button" (click)="voltarPesquisar()">

@@ -13,14 +13,19 @@
       <ion-input
         type="email"
         placeholder="exemplo@gmail.com"
+        [(ngModel)]="email"
         class="custom-input">
       </ion-input>
 
       <ion-label>Palavra-passe</ion-label>
       <ion-input
-        type="password"
+        [type]="mostrarSenha ? 'text' : 'password'"
         placeholder="********"
+        [(ngModel)]="senha"
         class="custom-input">
+        <ion-button fill="clear" slot="end" (click)="alternarVisibilidadeSenha()">
+          <ion-icon [name]="mostrarSenha ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+        </ion-button>
       </ion-input>
 
     </div>

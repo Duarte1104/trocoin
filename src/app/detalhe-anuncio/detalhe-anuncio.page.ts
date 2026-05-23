@@ -13,9 +13,17 @@ import { MensagensService } from '../services/mensagens.service';
   standalone: false
 })
 export class DetalheAnuncioPage implements OnInit {
+  /** Dados do anúncio a mostrar */
   public anuncio?: Anuncio;
+
+  /** Dados do vendedor deste anúncio */
   public vendedor?: Utilizador;
+
+  /** Controla o indicador de carregamento */
   public carregando = true;
+
+  /** Indica se o anúncio pertence ao utilizador com sessão ativa */
+  public anuncioMeu = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -33,7 +41,11 @@ export class DetalheAnuncioPage implements OnInit {
     await this.carregarDetalhe();
   }
 
-  // Carrega o anúncio através do ID recebido na rota
+  /**
+   * Carrega os dados do anúncio através do ID recebido na rota.
+   * Verifica também se o anúncio pertence ao utilizador atual para
+   * ocultar os botões de proposta (não faz sentido propor a si próprio).
+   */
   private async carregarDetalhe(): Promise<void> {
     this.carregando = true;
 
@@ -49,16 +61,21 @@ export class DetalheAnuncioPage implements OnInit {
 
     if (this.anuncio) {
       this.vendedor = await this.utilizadoresService.obterUtilizadorPorId(this.anuncio.vendedorId);
+
+      // Verificar se o anúncio pertence ao utilizador com sessão ativa
+      const utilizadorAtualId = await this.utilizadoresService.obterIdUtilizadorAtual();
+      this.anuncioMeu = this.anuncio.vendedorId === utilizadorAtualId;
     }
 
     this.carregando = false;
   }
 
+  /** Volta para a listagem de anúncios */
   public voltar(): void {
     this.router.navigateByUrl('/tabs/pesquisar');
   }
 
-  // Adiciona ou remove o anúncio dos favoritos
+  /** Adiciona ou remove o anúncio dos favoritos */
   public async alternarFavorito(): Promise<void> {
     if (!this.anuncio) {
       return;
@@ -68,7 +85,7 @@ export class DetalheAnuncioPage implements OnInit {
     await this.carregarDetalhe();
   }
 
-  // Cria ou abre uma conversa com o vendedor
+  /** Cria ou abre uma conversa com o vendedor deste anúncio */
   public async contactarVendedor(): Promise<void> {
     if (!this.anuncio) {
       return;
@@ -82,6 +99,7 @@ export class DetalheAnuncioPage implements OnInit {
     this.router.navigateByUrl(`/conversa/${conversa.id}`);
   }
 
+  /** Navega para a página de proposta de compra */
   public proporCompra(): void {
     if (!this.anuncio) {
       return;
@@ -90,6 +108,7 @@ export class DetalheAnuncioPage implements OnInit {
     this.router.navigateByUrl(`/propor-compra/${this.anuncio.id}`);
   }
 
+  /** Navega para a página de proposta de troca */
   public proporTroca(): void {
     if (!this.anuncio) {
       return;
@@ -98,6 +117,7 @@ export class DetalheAnuncioPage implements OnInit {
     this.router.navigateByUrl(`/propor-troca/${this.anuncio.id}`);
   }
 
+  /** Formata um valor em euros para exibição */
   public formatarPreco(preco: number): string {
     return new Intl.NumberFormat('pt-PT', {
       style: 'currency',
@@ -105,6 +125,7 @@ export class DetalheAnuncioPage implements OnInit {
     }).format(preco);
   }
 
+  /** Devolve a imagem principal do anúncio ou uma imagem por omissão */
   public obterImagemPrincipal(): string {
     if (!this.anuncio || !this.anuncio.imagens || this.anuncio.imagens.length === 0) {
       return 'assets/img/moedas/moeda-ouro.png';
@@ -113,6 +134,7 @@ export class DetalheAnuncioPage implements OnInit {
     return this.anuncio.imagens[0];
   }
 
+  /** Devolve o texto legível do tipo de anúncio */
   public obterTextoTipo(): string {
     if (!this.anuncio) {
       return '';

@@ -73,6 +73,11 @@
         <p>@{{ vendedor.username }}</p>
         <span>★★★★★ {{ vendedor.avaliacao || 5 }}/5</span>
       </div>
+
+      <!-- Indicador de anúncio próprio -->
+      <ion-chip color="primary" *ngIf="anuncioMeu">
+        <ion-label>O teu anúncio</ion-label>
+      </ion-chip>
     </div>
 
     <div class="description-card">
@@ -99,13 +104,23 @@
       </div>
     </div>
 
-    <div class="actions-area">
-      <ion-button expand="block" class="main-button" (click)="proporCompra()">
+    <!-- Ações disponíveis apenas para anúncios de outros utilizadores -->
+    <div class="actions-area" *ngIf="!anuncioMeu">
+
+      <ion-button
+        expand="block"
+        class="main-button"
+        *ngIf="a.tipo === 'venda' || a.tipo === 'venda-troca'"
+        (click)="proporCompra()">
         <ion-icon name="card-outline" slot="start"></ion-icon>
         Propor compra
       </ion-button>
 
-      <ion-button expand="block" class="secondary-button" (click)="proporTroca()">
+      <ion-button
+        expand="block"
+        class="secondary-button"
+        *ngIf="a.tipo === 'troca' || a.tipo === 'venda-troca'"
+        (click)="proporTroca()">
         <ion-icon name="swap-horizontal-outline" slot="start"></ion-icon>
         Propor troca
       </ion-button>
@@ -114,6 +129,15 @@
         <ion-icon name="chatbubble-outline" slot="start"></ion-icon>
         Enviar mensagem
       </ion-button>
+
+    </div>
+
+    <!-- Mensagem para o utilizador quando é o próprio anúncio -->
+    <div class="actions-area" *ngIf="anuncioMeu">
+      <ion-note class="own-ad-note">
+        <ion-icon name="information-circle-outline"></ion-icon>
+        Este é um dos teus anúncios.
+      </ion-note>
     </div>
 
   </div>

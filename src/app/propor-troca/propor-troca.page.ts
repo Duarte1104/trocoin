@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastController } from '@ionic/angular';
 import { Anuncio } from '../models/anuncio';
 import { Utilizador } from '../models/utilizador';
 import { AnunciosService } from '../services/anuncios.service';
@@ -13,12 +14,22 @@ import { MensagensService } from '../services/mensagens.service';
   standalone: false
 })
 export class ProporTrocaPage implements OnInit {
+  /** Dados do anúncio sobre o qual se faz a proposta */
   public anuncio?: Anuncio;
+
+  /** Dados do vendedor do anúncio */
   public vendedor?: Utilizador;
 
+  /** Nome da moeda que o utilizador pretende oferecer */
   public moedaOferecida = '';
+
+  /** Estado de conservação da moeda a oferecer */
   public estadoMoeda = 'Bom';
+
+  /** Mensagem opcional ao vendedor */
   public descricaoTroca = '';
+
+  /** Controla o indicador de carregamento */
   public carregando = true;
 
   constructor(
@@ -26,14 +37,17 @@ export class ProporTrocaPage implements OnInit {
     private router: Router,
     private anunciosService: AnunciosService,
     private utilizadoresService: UtilizadoresService,
-    private mensagensService: MensagensService
+    private mensagensService: MensagensService,
+    private toastController: ToastController
   ) {}
 
   public async ngOnInit(): Promise<void> {
     await this.carregarAnuncio();
   }
 
-  // Carrega o anúncio através do ID recebido na rota
+  /**
+   * Carrega os dados do anúncio através do ID recebido na rota.
+   */
   private async carregarAnuncio(): Promise<void> {
     this.carregando = true;
 
@@ -54,6 +68,7 @@ export class ProporTrocaPage implements OnInit {
     this.carregando = false;
   }
 
+  /** Volta para o detalhe do anúncio */
   public voltar(): void {
     if (this.anuncio) {
       this.router.navigateByUrl(`/detalhe-anuncio/${this.anuncio.id}`);
@@ -63,11 +78,24 @@ export class ProporTrocaPage implements OnInit {
     this.router.navigateByUrl('/tabs/pesquisar');
   }
 
-  // Envia uma proposta de troca através das mensagens da app
+  /**
+   * Envia a proposta de troca ao vendedor através das mensagens da app.
+   * Usa o ID do utilizador com sessão ativa como remetente.
+   */
   public async enviarPropostaTroca(): Promise<void> {
     if (!this.anuncio || !this.moedaOferecida.trim()) {
+      const toast = await this.toastController.create({
+        message: 'Indica a moeda que pretendes oferecer.',
+        duration: 2000,
+        position: 'bottom',
+        color: 'warning'
+      });
+      await toast.present();
       return;
     }
+
+    // Obter o ID do utilizador com sessão ativa
+    const utilizadorAtualId = await this.utilizadoresService.obterIdUtilizadorAtual();
 
     const conversa = await this.mensagensService.criarConversa(
       this.anuncio.id,
@@ -77,12 +105,12 @@ export class ProporTrocaPage implements OnInit {
     const textoProposta =
       `Proposta de troca: ofereço "${this.moedaOferecida}" ` +
       `em estado "${this.estadoMoeda}". ` +
-      `${this.descricaoTroca ? 'Descrição: ' + this.descricaoTroca : ''}`;
+      `${this.descricaoTroca ? 'Mensagem: ' + this.descricaoTroca : ''}`;
 
     await this.mensagensService.enviarMensagem(
       conversa.id,
       this.anuncio.id,
-      1,
+      utilizadorAtualId,
       textoProposta,
       'proposta-troca'
     );
@@ -90,6 +118,7 @@ export class ProporTrocaPage implements OnInit {
     this.router.navigateByUrl(`/confirmacao-troca/${this.anuncio.id}`);
   }
 
+  /** Formata um valor em euros para exibição */
   public formatarPreco(preco: number): string {
     return new Intl.NumberFormat('pt-PT', {
       style: 'currency',
@@ -97,6 +126,7 @@ export class ProporTrocaPage implements OnInit {
     }).format(preco);
   }
 
+  /** Devolve a imagem principal do anúncio ou uma imagem por omissão */
   public obterImagemPrincipal(): string {
     if (!this.anuncio || !this.anuncio.imagens || this.anuncio.imagens.length === 0) {
       return 'assets/img/moedas/moeda-ouro.png';

@@ -11,40 +11,31 @@
 
   <div class="form-wrapper">
 
+    <!-- Input de ficheiro oculto para escolher imagem do dispositivo -->
     <input
-  #fileInput
-  type="file"
-  accept="image/*"
-  hidden
-  (change)="selecionarImagemFicheiro($event)">
+      #fileInput
+      type="file"
+      accept="image/*"
+      hidden
+      (change)="selecionarImagemFicheiro($event)">
 
-<div class="photo-card" (click)="abrirSeletorFicheiro(fileInput)">
+    <div class="photo-card" (click)="abrirSeletorFicheiro(fileInput)">
 
-  <div class="photo-placeholder" *ngIf="!imagemSelecionada">
-    <ion-icon name="camera-outline"></ion-icon>
-    <h2>Adicionar foto</h2>
-    <p>Tira uma foto ou escolhe da galeria</p>
-  </div>
+      <div class="photo-placeholder" *ngIf="!imagemSelecionada">
+        <ion-icon name="camera-outline"></ion-icon>
+        <h2>Adicionar foto</h2>
+        <p>Toca para escolher uma imagem</p>
+      </div>
 
-  <img
-    *ngIf="imagemSelecionada"
-    [src]="imagemSelecionada"
-    alt="Foto da moeda">
+      <img
+        *ngIf="imagemSelecionada"
+        [src]="imagemSelecionada"
+        alt="Foto da moeda">
 
-</div>
+    </div>
 
-<ion-button expand="block" fill="outline" class="photo-button" (click)="abrirSeletorFicheiro(fileInput)">
-  <ion-icon name="image-outline" slot="start"></ion-icon>
-  Escolher do computador
-</ion-button>
-
-<ion-button expand="block" fill="outline" class="photo-button" (click)="escolherImagem()">
-  <ion-icon name="camera-outline" slot="start"></ion-icon>
-  Câmara / Galeria do telemóvel
-</ion-button>
-
-    <ion-button expand="block" fill="outline" class="photo-button" (click)="escolherImagem()">
-      <ion-icon name="camera-outline" slot="start"></ion-icon>
+    <ion-button expand="block" fill="outline" class="photo-button" (click)="abrirSeletorFicheiro(fileInput)">
+      <ion-icon name="image-outline" slot="start"></ion-icon>
       Escolher imagem
     </ion-button>
 
@@ -64,7 +55,7 @@
         placeholder="Descreve o estado, ano, origem e detalhes da moeda.">
       </ion-textarea>
 
-      <ion-label>Preço</ion-label>
+      <ion-label>Preço (€)</ion-label>
       <ion-input
         type="number"
         [(ngModel)]="preco"
@@ -103,7 +94,7 @@
     <div class="info-card">
       <ion-icon name="information-circle-outline"></ion-icon>
       <p>
-        O anúncio será guardado localmente no telemóvel através do Ionic Storage.
+        O anúncio será guardado localmente no dispositivo através do Ionic Storage.
       </p>
     </div>
 

@@ -1,3 +1,14 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button fill="clear" (click)="voltarPesquisar()">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Anúncio publicado</ion-title>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content [fullscreen]="true" class="page-content">
 
   <div class="loading-area" *ngIf="carregando">
@@ -9,10 +20,7 @@
     <ion-icon name="alert-circle-outline"></ion-icon>
     <h2>Anúncio não encontrado</h2>
     <p>Não foi possível carregar o anúncio publicado.</p>
-
-    <ion-button (click)="voltarPesquisar()">
-      Voltar à pesquisa
-    </ion-button>
+    <ion-button (click)="voltarPesquisar()">Voltar à pesquisa</ion-button>
   </div>
 
   <div class="success-wrapper" *ngIf="!carregando && anuncio as a">
@@ -29,7 +37,6 @@
 
     <div class="anuncio-card">
       <img [src]="obterImagemPrincipal()" [alt]="a.titulo">
-
       <div class="anuncio-info">
         <h2>{{ a.titulo }}</h2>
         <p>{{ formatarPreco(a.preco) }}</p>
@@ -39,9 +46,7 @@
 
     <div class="info-card">
       <ion-icon name="phone-portrait-outline"></ion-icon>
-      <p>
-        O anúncio ficou guardado no dispositivo através do Ionic Storage e já aparece na pesquisa.
-      </p>
+      <p>O anúncio ficou guardado no dispositivo através do Ionic Storage e já aparece na pesquisa.</p>
     </div>
 
     <ion-button expand="block" class="main-button" (click)="verAnuncio()">

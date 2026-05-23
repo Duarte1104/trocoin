@@ -2,7 +2,7 @@
 
   <div class="top-bar">
     <div>
-      <h1>Profile</h1>
+      <h1>Perfil</h1>
       <p>Conta, anúncios e preferências</p>
     </div>
 
@@ -35,7 +35,7 @@
       </div>
 
       <div class="stat-card">
-        <strong>5</strong>
+        <strong>{{ utilizador?.avaliacao || 5 }}</strong>
         <span>Avaliação</span>
       </div>
 
@@ -59,6 +59,11 @@
       <ion-button expand="block" fill="clear" class="clear-button" (click)="confirmarLimparDados()">
         <ion-icon name="trash-outline" slot="start"></ion-icon>
         Limpar dados locais
+      </ion-button>
+
+      <ion-button expand="block" fill="clear" color="danger" class="logout-button" (click)="confirmarTerminarSessao()">
+        <ion-icon name="log-out-outline" slot="start"></ion-icon>
+        Terminar sessão
       </ion-button>
     </div>
 
