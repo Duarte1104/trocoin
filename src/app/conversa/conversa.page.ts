@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+
 import { Conversa } from '../models/conversa';
 import { Mensagem } from '../models/mensagem';
 import { Anuncio } from '../models/anuncio';
 import { Utilizador } from '../models/utilizador';
+
 import { MensagensService } from '../services/mensagens.service';
 import { AnunciosService } from '../services/anuncios.service';
 import { UtilizadoresService } from '../services/utilizadores.service';
@@ -15,26 +17,17 @@ import { UtilizadoresService } from '../services/utilizadores.service';
   standalone: false
 })
 export class ConversaPage implements OnInit {
-  /** Dados da conversa atual */
   public conversa?: Conversa;
-
-  /** Lista de mensagens desta conversa */
   public mensagens: Mensagem[] = [];
-
-  /** Dados do anúncio relacionado com a conversa */
   public anuncio?: Anuncio;
-
-  /** Dados do outro utilizador nesta conversa */
   public outroUtilizador?: Utilizador;
-
-  /** Texto da nova mensagem a enviar */
   public novaMensagem = '';
-
-  /** ID do utilizador com sessão ativa */
   public utilizadorAtualId = 0;
-
-  /** Controla o indicador de carregamento */
   public carregando = true;
+
+  // controla visibilidade dos botões de proposta com base no tipo do anúncio
+  public podeComprar = false;
+  public podeTrocar = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -45,58 +38,51 @@ export class ConversaPage implements OnInit {
   ) {}
 
   public async ngOnInit(): Promise<void> {
-    await this.carregarConversa();
+    await this.carregar();
   }
 
   public async ionViewWillEnter(): Promise<void> {
-    await this.carregarConversa();
+    await this.carregar();
   }
 
-  /**
-   * Carrega a conversa e as suas mensagens através do ID recebido na rota.
-   * Lê também o ID do utilizador atual do Ionic Storage para distinguir
-   * as mensagens enviadas das recebidas.
-   */
-  private async carregarConversa(): Promise<void> {
+  private async carregar(): Promise<void> {
     this.carregando = true;
-
-    // Obter o ID do utilizador com sessão ativa
     this.utilizadorAtualId = await this.utilizadoresService.obterIdUtilizadorAtual();
 
-    const idRecebido = this.route.snapshot.paramMap.get('id');
-    const conversaId = Number(idRecebido);
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    if (!id) { this.carregando = false; return; }
 
-    if (!conversaId) {
-      this.carregando = false;
-      return;
-    }
-
-    this.conversa = await this.mensagensService.obterConversaPorId(conversaId);
+    this.conversa = await this.mensagensService.obterConversaPorId(id);
 
     if (this.conversa) {
       this.mensagens = await this.mensagensService.listarMensagensPorConversa(this.conversa.id);
       this.anuncio = await this.anunciosService.obterAnuncioPorId(this.conversa.anuncioId);
-      this.outroUtilizador = await this.utilizadoresService.obterUtilizadorPorId(this.conversa.outroUtilizadorId);
+
+      // o outro utilizador é quem não somos nós
+      const outroId = this.conversa.utilizadorId === this.utilizadorAtualId
+        ? this.conversa.outroUtilizadorId
+        : this.conversa.utilizadorId;
+
+      this.outroUtilizador = await this.utilizadoresService.obterUtilizadorPorId(outroId);
+
+      // botões de proposta dependem do tipo do anúncio e de não ser o próprio vendedor
+      const ehVendedor = this.anuncio?.vendedorId === this.utilizadorAtualId;
+      if (this.anuncio && !ehVendedor) {
+        this.podeComprar = this.anuncio.tipo === 'venda' || this.anuncio.tipo === 'venda-troca';
+        this.podeTrocar = this.anuncio.tipo === 'troca' || this.anuncio.tipo === 'venda-troca';
+      }
     }
 
     this.carregando = false;
   }
 
-  /** Volta para a lista de mensagens */
   public voltar(): void {
     this.router.navigateByUrl('/tabs/mensagens');
   }
 
-  /**
-   * Envia a mensagem escrita pelo utilizador para esta conversa.
-   * Usa o ID do utilizador com sessão ativa como remetente.
-   */
   public async enviarMensagem(): Promise<void> {
     const texto = this.novaMensagem.trim();
-
-    if (!texto || !this.conversa) {
-      return;
-    }
+    if (!texto || !this.conversa) return;
 
     await this.mensagensService.enviarMensagem(
       this.conversa.id,
@@ -107,60 +93,35 @@ export class ConversaPage implements OnInit {
     );
 
     this.novaMensagem = '';
-    await this.carregarConversa();
+    await this.carregar();
   }
 
-  /** Navega para a página de proposta de compra */
   public proporCompra(): void {
-    if (!this.conversa) {
-      return;
-    }
-
-    this.router.navigateByUrl(`/propor-compra/${this.conversa.anuncioId}`);
+    if (this.conversa) this.router.navigateByUrl(`/propor-compra/${this.conversa.anuncioId}`);
   }
 
-  /** Navega para a página de proposta de troca */
   public proporTroca(): void {
-    if (!this.conversa) {
-      return;
-    }
-
-    this.router.navigateByUrl(`/propor-troca/${this.conversa.anuncioId}`);
+    if (this.conversa) this.router.navigateByUrl(`/propor-troca/${this.conversa.anuncioId}`);
   }
 
-  /** Abre o detalhe do anúncio relacionado com a conversa */
   public abrirDetalheAnuncio(): void {
-    if (!this.conversa) {
-      return;
-    }
-
-    this.router.navigateByUrl(`/detalhe-anuncio/${this.conversa.anuncioId}`);
+    if (this.conversa) this.router.navigateByUrl(`/detalhe-anuncio/${this.conversa.anuncioId}`);
   }
 
-  /** Verifica se a mensagem foi enviada pelo utilizador atual */
-  public mensagemDoUtilizador(mensagem: Mensagem): boolean {
-    return mensagem.remetenteId === this.utilizadorAtualId;
+  public mensagemDoUtilizador(m: Mensagem): boolean {
+    return m.remetenteId === this.utilizadorAtualId;
   }
 
-  /** Devolve o nome do outro utilizador para o cabeçalho */
   public obterNomeTopo(): string {
-    return this.outroUtilizador?.nome || 'Colecionador';
+    return this.outroUtilizador?.nome || 'Conversa';
   }
 
-  /** Devolve a imagem do anúncio ou uma imagem por omissão */
   public obterImagemAnuncio(): string {
-    if (!this.anuncio || !this.anuncio.imagens || this.anuncio.imagens.length === 0) {
-      return 'assets/img/moedas/moeda-ouro.png';
-    }
-
+    if (!this.anuncio?.imagens?.length) return 'assets/img/moedas/moeda-ouro.png';
     return this.anuncio.imagens[0];
   }
 
-  /** Formata um valor em euros para exibição */
   public formatarPreco(preco: number): string {
-    return new Intl.NumberFormat('pt-PT', {
-      style: 'currency',
-      currency: 'EUR'
-    }).format(preco);
+    return new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR' }).format(preco);
   }
 }

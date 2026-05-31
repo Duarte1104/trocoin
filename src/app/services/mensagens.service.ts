@@ -9,94 +9,114 @@ import { StorageService } from './storage.service';
   providedIn: 'root'
 })
 export class MensagensService {
+
   private caminhoConversasJson = 'assets/data/conversas.json';
   private caminhoMensagensJson = 'assets/data/mensagens.json';
 
-  private chaveConversasCriadas = 'trocoin_conversas_criadas';
-  private chaveMensagensCriadas = 'trocoin_mensagens_criadas';
+  private CHAVE_CONVERSAS = 'trocoin_conversas_criadas';
+  private CHAVE_MENSAGENS = 'trocoin_mensagens_criadas';
 
   constructor(
     private http: HttpClient,
     private storageService: StorageService
   ) {}
 
-  public async listarConversas(): Promise<Conversa[]> {
-    const conversasJson = await firstValueFrom(this.http.get<Conversa[]>(this.caminhoConversasJson));
-    const conversasCriadas = await this.storageService.obter<Conversa[]>(this.chaveConversasCriadas) || [];
-
-    return [...conversasJson, ...conversasCriadas];
+  async listarConversas(): Promise<Conversa[]> {
+    const doJson = await firstValueFrom(this.http.get<Conversa[]>(this.caminhoConversasJson));
+    const criadas = await this.storageService.obter<Conversa[]>(this.CHAVE_CONVERSAS) || [];
+    return [...doJson, ...criadas];
   }
 
-  public async obterConversaPorId(id: number): Promise<Conversa | undefined> {
-    const conversas = await this.listarConversas();
-    return conversas.find(conversa => conversa.id === id);
+  async obterConversaPorId(id: number): Promise<Conversa | undefined> {
+    const lista = await this.listarConversas();
+    return lista.find(c => c.id === id);
   }
 
-  public async listarMensagensPorConversa(conversaId: number): Promise<Mensagem[]> {
-    const mensagensJson = await firstValueFrom(this.http.get<Mensagem[]>(this.caminhoMensagensJson));
-    const mensagensCriadas = await this.storageService.obter<Mensagem[]>(this.chaveMensagensCriadas) || [];
-
-    return [...mensagensJson, ...mensagensCriadas]
-      .filter(mensagem => mensagem.conversaId === conversaId);
+  // devolve conversas do utilizador atual (como comprador ou vendedor)
+  async listarConversasDoUtilizador(utilizadorId: number): Promise<Conversa[]> {
+    const todas = await this.listarConversas();
+    return todas.filter(c =>
+      c.utilizadorId === utilizadorId || c.outroUtilizadorId === utilizadorId
+    );
   }
 
-  public async enviarMensagem(
+  async listarMensagensPorConversa(conversaId: number): Promise<Mensagem[]> {
+    const doJson = await firstValueFrom(this.http.get<Mensagem[]>(this.caminhoMensagensJson));
+    const criadas = await this.storageService.obter<Mensagem[]>(this.CHAVE_MENSAGENS) || [];
+
+    return [...doJson, ...criadas]
+      .filter(m => m.conversaId === conversaId)
+      .sort((a, b) => a.id - b.id);
+  }
+
+  async enviarMensagem(
     conversaId: number,
     anuncioId: number,
     remetenteId: number,
     texto: string,
     tipo: 'texto' | 'proposta-compra' | 'proposta-troca' = 'texto'
   ): Promise<Mensagem> {
-    const mensagensCriadas = await this.storageService.obter<Mensagem[]>(this.chaveMensagensCriadas) || [];
+    const criadas = await this.storageService.obter<Mensagem[]>(this.CHAVE_MENSAGENS) || [];
 
-    const novaMensagem: Mensagem = {
+    const nova: Mensagem = {
       id: Date.now(),
       conversaId,
       anuncioId,
       remetenteId,
       texto,
-      data: new Date().toLocaleTimeString('pt-PT', {
-        hour: '2-digit',
-        minute: '2-digit'
-      }),
+      data: new Date().toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' }),
       tipo
     };
 
-    mensagensCriadas.push(novaMensagem);
+    criadas.push(nova);
+    await this.storageService.guardar(this.CHAVE_MENSAGENS, criadas);
 
-    await this.storageService.guardar(this.chaveMensagensCriadas, mensagensCriadas);
+    // atualizar a última mensagem da conversa
+    await this.atualizarUltimaMensagem(conversaId, texto);
 
-    return novaMensagem;
+    return nova;
   }
 
-  public async criarConversa(anuncioId: number, outroUtilizadorId: number): Promise<Conversa> {
-    const conversas = await this.listarConversas();
+  // cria conversa se ainda não existir, usa o utilizadorId passado como argumento
+  async criarConversa(anuncioId: number, outroUtilizadorId: number, utilizadorAtualId: number): Promise<Conversa> {
+    const todas = await this.listarConversas();
 
-    const conversaExistente = conversas.find(conversa =>
-      conversa.anuncioId === anuncioId &&
-      conversa.outroUtilizadorId === outroUtilizadorId
+    // verificar se já existe uma conversa entre estes dois utilizadores sobre este anúncio
+    const existente = todas.find(c =>
+      c.anuncioId === anuncioId && (
+        (c.utilizadorId === utilizadorAtualId && c.outroUtilizadorId === outroUtilizadorId) ||
+        (c.utilizadorId === outroUtilizadorId && c.outroUtilizadorId === utilizadorAtualId)
+      )
     );
 
-    if (conversaExistente) {
-      return conversaExistente;
-    }
+    if (existente) return existente;
 
-    const conversasCriadas = await this.storageService.obter<Conversa[]>(this.chaveConversasCriadas) || [];
+    const criadas = await this.storageService.obter<Conversa[]>(this.CHAVE_CONVERSAS) || [];
 
-    const novaConversa: Conversa = {
+    const nova: Conversa = {
       id: Date.now(),
       anuncioId,
-      utilizadorId: 1,
+      utilizadorId: utilizadorAtualId,
       outroUtilizadorId,
       ultimaMensagem: '',
-      dataUltimaMensagem: '',
+      dataUltimaMensagem: new Date().toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' }),
       mensagensNaoLidas: 0
     };
 
-    conversasCriadas.push(novaConversa);
+    criadas.push(nova);
+    await this.storageService.guardar(this.CHAVE_CONVERSAS, criadas);
+    return nova;
+  }
 
-    await this.storageService.guardar(this.chaveConversasCriadas, conversasCriadas);
+  // atualiza o texto da última mensagem na conversa (para aparecer na listagem)
+  private async atualizarUltimaMensagem(conversaId: number, texto: string): Promise<void> {
+    const criadas = await this.storageService.obter<Conversa[]>(this.CHAVE_CONVERSAS) || [];
+    const idx = criadas.findIndex(c => c.id === conversaId);
 
-    return novaConversa;
+    if (idx !== -1) {
+      criadas[idx].ultimaMensagem = texto.length > 50 ? texto.substring(0, 50) + '...' : texto;
+      criadas[idx].dataUltimaMensagem = new Date().toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
+      await this.storageService.guardar(this.CHAVE_CONVERSAS, criadas);
+    }
   }
 }

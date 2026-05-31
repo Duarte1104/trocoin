@@ -75,6 +75,11 @@ ion-searchbar {
   font-size: 14px;
 }
 
+// Garante que o valor selecionado no ion-select é sempre visível
+ion-select {
+  color: var(--ion-text-color, #222222);
+}
+
 ion-tab-bar {
   --background: var(--trocoin-background);
   border-top: 1px solid var(--trocoin-border);

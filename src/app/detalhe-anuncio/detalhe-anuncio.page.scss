@@ -245,3 +245,16 @@ ion-toolbar ion-button {
   --border-color: #ff5a00;
   --color: #ff5a00;
 }
+// nota quando é o próprio anúncio
+.own-ad-note {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f0f0f0;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: #666;
+  width: 100%;
+  ion-icon { font-size: 18px; color: #aaa; }
+}

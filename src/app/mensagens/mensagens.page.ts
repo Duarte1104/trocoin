@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Conversa } from '../models/conversa';
-import { Mensagem } from '../models/mensagem';
 import { Anuncio } from '../models/anuncio';
 import { Utilizador } from '../models/utilizador';
+import { Mensagem } from '../models/mensagem';
 
 import { MensagensService } from '../services/mensagens.service';
 import { AnunciosService } from '../services/anuncios.service';
@@ -26,6 +26,7 @@ interface ConversaCard extends Conversa {
 export class MensagensPage implements OnInit {
   public conversas: ConversaCard[] = [];
   public carregando = true;
+  private utilizadorAtualId = 0;
 
   constructor(
     private router: Router,
@@ -42,39 +43,39 @@ export class MensagensPage implements OnInit {
     await this.carregarConversas();
   }
 
-  // Carrega todas as conversas e junta dados do anúncio, vendedor e última mensagem
+  // Carrega apenas as conversas do utilizador atual, com dados do anúncio e do outro participante
   private async carregarConversas(): Promise<void> {
     this.carregando = true;
 
-    const conversasBase = await this.mensagensService.listarConversas();
+    this.utilizadorAtualId = await this.utilizadoresService.obterIdUtilizadorAtual();
+
+    // buscar só as conversas do utilizador em sessão
+    const conversasBase = await this.mensagensService.listarConversasDoUtilizador(this.utilizadorAtualId);
 
     this.conversas = await Promise.all(
       conversasBase.map(async conversa => {
         const anuncio = await this.anunciosService.obterAnuncioPorId(conversa.anuncioId);
-        const outroUtilizador = await this.utilizadoresService.obterUtilizadorPorId(conversa.outroUtilizadorId);
-        const mensagens = await this.mensagensService.listarMensagensPorConversa(conversa.id);
 
-        const ultimaMensagem = this.obterUltimaMensagem(mensagens);
+        // o "outro utilizador" é quem não somos nós
+        const outroId = conversa.utilizadorId === this.utilizadorAtualId
+          ? conversa.outroUtilizadorId
+          : conversa.utilizadorId;
+
+        const outroUtilizador = await this.utilizadoresService.obterUtilizadorPorId(outroId);
+        const mensagens = await this.mensagensService.listarMensagensPorConversa(conversa.id);
+        const ultima = mensagens.length > 0 ? mensagens[mensagens.length - 1] : undefined;
 
         return {
           ...conversa,
           anuncio,
           outroUtilizador,
-          ultimaMensagemTexto: ultimaMensagem?.texto || conversa.ultimaMensagem || 'Sem mensagens ainda',
-          horaUltimaMensagem: ultimaMensagem?.data || conversa.dataUltimaMensagem || ''
+          ultimaMensagemTexto: ultima?.texto || conversa.ultimaMensagem || 'Sem mensagens',
+          horaUltimaMensagem: ultima?.data || conversa.dataUltimaMensagem || ''
         };
       })
     );
 
     this.carregando = false;
-  }
-
-  private obterUltimaMensagem(mensagens: Mensagem[]): Mensagem | undefined {
-    if (mensagens.length === 0) {
-      return undefined;
-    }
-
-    return mensagens[mensagens.length - 1];
   }
 
   public abrirConversa(conversaId: number): void {
@@ -86,10 +87,7 @@ export class MensagensPage implements OnInit {
   }
 
   public obterImagemAnuncio(conversa: ConversaCard): string {
-    if (!conversa.anuncio || !conversa.anuncio.imagens || conversa.anuncio.imagens.length === 0) {
-      return 'assets/img/moedas/moeda-ouro.png';
-    }
-
+    if (!conversa.anuncio?.imagens?.length) return 'assets/img/moedas/moeda-ouro.png';
     return conversa.anuncio.imagens[0];
   }
 

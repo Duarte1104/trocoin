@@ -13,55 +13,51 @@
 
   <div class="loading-area" *ngIf="carregando">
     <ion-spinner name="crescent"></ion-spinner>
-    <p>A confirmar proposta...</p>
   </div>
 
-  <div class="success-wrapper" *ngIf="!carregando">
+  <div class="wrapper" *ngIf="!carregando">
 
-    <div class="success-icon">
+    <div class="success-icon swap">
       <ion-icon name="swap-horizontal-outline"></ion-icon>
     </div>
 
-    <h1>Troca proposta!</h1>
+    <h1>Troca proposta com sucesso!</h1>
+    <p class="subtitle">O vendedor vai receber a tua proposta e pode responder pela conversa.</p>
 
-    <p class="subtitle">
-      A tua proposta de troca foi enviada ao vendedor através da conversa.
-    </p>
-
-    <div class="anuncio-card" *ngIf="anuncio">
+    <div class="ad-preview" *ngIf="anuncio">
       <img [src]="obterImagemPrincipal()" [alt]="anuncio.titulo">
       <div>
-        <h2>{{ anuncio.titulo }}</h2>
-        <p>Agora deves aguardar a resposta do outro colecionador.</p>
+        <p class="ad-title">{{ anuncio.titulo }}</p>
+        <p class="ad-sub">Aguarda a resposta do vendedor nas Mensagens.</p>
       </div>
     </div>
 
-    <div class="next-steps">
-      <h3>Como funciona agora?</h3>
+    <div class="steps-card">
       <div class="step">
-        <span>1</span>
-        <p>O vendedor recebe a tua proposta de troca.</p>
+        <span class="step-num">1</span>
+        <p>O vendedor avalia a tua proposta de troca.</p>
       </div>
       <div class="step">
-        <span>2</span>
-        <p>Podem trocar fotos e detalhes por mensagem.</p>
+        <span class="step-num">2</span>
+        <p>Trocam fotos e detalhes das moedas por mensagem.</p>
       </div>
       <div class="step">
-        <span>3</span>
-        <p>Se ambos aceitarem, combinam envio ou entrega.</p>
+        <span class="step-num">3</span>
+        <p>Se aceitarem, combinam o envio ou entrega.</p>
       </div>
     </div>
 
     <ion-button expand="block" class="main-button" (click)="abrirConversa()">
+      <ion-icon name="chatbubble-outline" slot="start"></ion-icon>
       Abrir conversa
     </ion-button>
 
-    <ion-button expand="block" fill="outline" class="secondary-button" (click)="irInbox()">
-      Ir para Mensagens
+    <ion-button expand="block" fill="outline" class="outline-button" (click)="irInbox()">
+      Ver todas as mensagens
     </ion-button>
 
     <ion-button expand="block" fill="clear" class="clear-button" (click)="voltarPesquisar()">
-      Voltar à pesquisa
+      Continuar a explorar
     </ion-button>
 
   </div>

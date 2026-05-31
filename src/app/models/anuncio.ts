@@ -12,4 +12,5 @@ export interface Anuncio {
   favorito?: boolean;
   publicadoPeloUtilizador?: boolean;
   dataPublicacao: string;
+  ano?: number;
 }
