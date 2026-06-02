@@ -1,109 +1,103 @@
 <ion-content [fullscreen]="true" class="page-content">
 
+  <!-- Input de ficheiro oculto (alternativa browser) -->
+  <input #fileInput type="file" accept="image/*" hidden (change)="selecionarImagemFicheiro($event)">
+
   <div class="top-bar">
     <div>
       <h1>Publicar</h1>
       <p>Cria um anúncio para vender ou trocar uma moeda</p>
     </div>
-
-    <ion-icon name="add-circle-outline"></ion-icon>
   </div>
 
   <div class="form-wrapper">
 
-    <!-- Input de ficheiro oculto para escolher imagem do dispositivo -->
-    <input
-      #fileInput
-      type="file"
-      accept="image/*"
-      hidden
-      (change)="selecionarImagemFicheiro($event)">
+    <!-- Área da foto -->
+    <div class="photo-area">
 
-    <div class="photo-card" (click)="abrirSeletorFicheiro(fileInput)">
-
-      <div class="photo-placeholder" *ngIf="!imagemSelecionada">
-        <ion-icon name="camera-outline"></ion-icon>
-        <h2>Adicionar foto</h2>
-        <p>Toca para escolher uma imagem</p>
+      <!-- Preview da imagem selecionada -->
+      <div class="photo-preview" *ngIf="imagemSelecionada">
+        <img [src]="imagemSelecionada" alt="Foto da moeda">
+        <ion-button fill="clear" class="remove-photo" (click)="limparFoto()">
+          <ion-icon name="close-circle"></ion-icon>
+        </ion-button>
       </div>
 
-      <img
-        *ngIf="imagemSelecionada"
-        [src]="imagemSelecionada"
-        alt="Foto da moeda">
+      <!-- Placeholder quando não há foto -->
+      <div class="photo-placeholder" *ngIf="!imagemSelecionada">
+        <ion-icon name="camera-outline"></ion-icon>
+        <p>Adiciona uma foto da tua moeda</p>
+      </div>
 
+      <!-- Botões de foto -->
+      <div class="photo-buttons">
+
+        <button class="photo-btn" (click)="tirarFoto()">
+          <ion-icon name="camera-outline"></ion-icon>
+          <span>Câmara</span>
+        </button>
+
+        <button class="photo-btn" (click)="escolherDaGaleria()">
+          <ion-icon name="images-outline"></ion-icon>
+          <span>Galeria</span>
+        </button>
+
+        <button class="photo-btn" (click)="abrirSeletorFicheiro(fileInput)">
+          <ion-icon name="folder-outline"></ion-icon>
+          <span>Ficheiro</span>
+        </button>
+
+      </div>
     </div>
 
-    <ion-button expand="block" fill="outline" class="photo-button" (click)="abrirSeletorFicheiro(fileInput)">
-      <ion-icon name="image-outline" slot="start"></ion-icon>
-      Escolher imagem
-    </ion-button>
-
+    <!-- Formulário -->
     <div class="form-card">
 
-      <ion-label>Título do anúncio</ion-label>
-      <ion-input
-        type="text"
-        [(ngModel)]="titulo"
-        placeholder="Ex: 1 Euro Espanha 1988">
-      </ion-input>
+      <div class="field">
+        <ion-label>Título do anúncio</ion-label>
+        <ion-input type="text" [(ngModel)]="titulo" placeholder="Ex: 1 Euro Espanha 1988"></ion-input>
+      </div>
 
-      <ion-label>Descrição</ion-label>
-      <ion-textarea
-        rows="4"
-        [(ngModel)]="descricao"
-        placeholder="Descreve o estado, ano, origem e detalhes da moeda.">
-      </ion-textarea>
+      <div class="field">
+        <ion-label>Descrição</ion-label>
+        <ion-textarea rows="4" [(ngModel)]="descricao" placeholder="Estado, ano, origem e detalhes da moeda."></ion-textarea>
+      </div>
 
-      <ion-label>Preço (€)</ion-label>
-      <ion-input
-        type="number"
-        [(ngModel)]="preco"
-        placeholder="Ex: 15">
-      </ion-input>
+      <div class="field">
+        <ion-label>Preço (€)</ion-label>
+        <ion-input type="number" [(ngModel)]="preco" placeholder="Ex: 15"></ion-input>
+      </div>
 
-      <ion-label>Tipo de anúncio</ion-label>
-      <ion-select
-        [(ngModel)]="tipo"
-        interface="popover">
-        <ion-select-option value="venda">Venda</ion-select-option>
-        <ion-select-option value="troca">Troca</ion-select-option>
-        <ion-select-option value="venda-troca">Venda ou troca</ion-select-option>
-      </ion-select>
+      <div class="field">
+        <ion-label>Tipo de anúncio</ion-label>
+        <ion-select [(ngModel)]="tipo" interface="popover">
+          <ion-select-option value="venda">Venda</ion-select-option>
+          <ion-select-option value="troca">Troca</ion-select-option>
+          <ion-select-option value="venda-troca">Venda ou troca</ion-select-option>
+        </ion-select>
+      </div>
 
-      <ion-label>Estado de conservação</ion-label>
-      <ion-select
-        [(ngModel)]="estadoConservacao"
-        interface="popover">
-        <ion-select-option value="Excelente">Excelente</ion-select-option>
-        <ion-select-option value="Muito Bom">Muito Bom</ion-select-option>
-        <ion-select-option value="Bom">Bom</ion-select-option>
-        <ion-select-option value="Razoável">Razoável</ion-select-option>
-        <ion-select-option value="Mau">Mau</ion-select-option>
-      </ion-select>
+      <div class="field">
+        <ion-label>Estado de conservação</ion-label>
+        <ion-select [(ngModel)]="estadoConservacao" interface="popover">
+          <ion-select-option value="Excelente">Excelente</ion-select-option>
+          <ion-select-option value="Muito Bom">Muito Bom</ion-select-option>
+          <ion-select-option value="Bom">Bom</ion-select-option>
+          <ion-select-option value="Razoável">Razoável</ion-select-option>
+          <ion-select-option value="Mau">Mau</ion-select-option>
+        </ion-select>
+      </div>
 
-      <ion-label>Localização</ion-label>
-      <ion-input
-        type="text"
-        [(ngModel)]="localizacao"
-        placeholder="Ex: Viana do Castelo, Portugal">
-      </ion-input>
+      <div class="field">
+        <ion-label>Localização</ion-label>
+        <ion-input type="text" [(ngModel)]="localizacao" placeholder="Ex: Viana do Castelo, Portugal"></ion-input>
+      </div>
 
-    </div>
-
-    <div class="info-card">
-      <ion-icon name="information-circle-outline"></ion-icon>
-      <p>
-        O anúncio será guardado localmente no dispositivo através do Ionic Storage.
-      </p>
     </div>
 
     <ion-button expand="block" class="main-button" (click)="publicarAnuncio()">
+      <ion-icon name="checkmark-outline" slot="start"></ion-icon>
       Publicar anúncio
-    </ion-button>
-
-    <ion-button expand="block" fill="clear" class="clear-button" (click)="limparFormulario()">
-      Limpar formulário
     </ion-button>
 
   </div>

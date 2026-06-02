@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { ToastController } from '@ionic/angular';
-
 import { AnunciosService } from '../services/anuncios.service';
 import { UtilizadoresService } from '../services/utilizadores.service';
 import { Anuncio } from '../models/anuncio';
@@ -14,25 +13,12 @@ import { Anuncio } from '../models/anuncio';
   standalone: false
 })
 export class NovoAnuncioPage {
-  /** Título do anúncio a publicar */
   public titulo = '';
-
-  /** Descrição detalhada da moeda */
   public descricao = '';
-
-  /** Preço pedido pelo utilizador */
   public preco: number | null = null;
-
-  /** Tipo de transação aceite */
   public tipo: 'venda' | 'troca' | 'venda-troca' = 'venda';
-
-  /** Estado de conservação da moeda */
   public estadoConservacao = 'Bom';
-
-  /** Localização do vendedor */
   public localizacao = 'Viana do Castelo, Portugal';
-
-  /** Imagem selecionada em base64 */
   public imagemSelecionada = '';
 
   constructor(
@@ -42,100 +28,100 @@ export class NovoAnuncioPage {
     private toastController: ToastController
   ) {}
 
-  /**
-   * Abre a câmara ou galeria do dispositivo através do Capacitor.
-   * No browser, solicita ao utilizador que use o seletor de ficheiros.
-   */
-  public async escolherImagem(): Promise<void> {
+  // reseta o formulário sempre que a página fica visível (ex: ao voltar de anuncio-publicado)
+  public ionViewWillEnter(): void {
+    this.limparFormulario();
+  }
+
+  // Abre a câmara do telemóvel diretamente para tirar uma foto
+  public async tirarFoto(): Promise<void> {
     try {
       const imagem = await Camera.getPhoto({
-        quality: 75,
+        quality: 80,
         allowEditing: false,
         resultType: CameraResultType.DataUrl,
-        source: CameraSource.Prompt
+        source: CameraSource.Camera
       });
-
       if (imagem.dataUrl) {
         this.imagemSelecionada = imagem.dataUrl;
       }
     } catch (erro) {
-      await this.mostrarMensagem('Usa o botão "Escolher imagem" para selecionar uma foto.', 'warning');
+      await this.mostrarMensagem('Não foi possível abrir a câmara.', 'warning');
     }
   }
 
-  /** Abre o seletor de ficheiros nativo do browser */
+  // Abre a galeria do telemóvel para escolher uma foto existente
+  public async escolherDaGaleria(): Promise<void> {
+    try {
+      const imagem = await Camera.getPhoto({
+        quality: 80,
+        allowEditing: false,
+        resultType: CameraResultType.DataUrl,
+        source: CameraSource.Photos
+      });
+      if (imagem.dataUrl) {
+        this.imagemSelecionada = imagem.dataUrl;
+      }
+    } catch (erro) {
+      // no browser não há galeria — usa o seletor de ficheiros
+    }
+  }
+
+  // Abre o seletor de ficheiros nativo do browser (alternativa para quando não está no telemóvel)
   public abrirSeletorFicheiro(input: HTMLInputElement): void {
     input.click();
   }
 
-  /**
-   * Lê a imagem escolhida no seletor de ficheiros e converte para base64
-   * para poder ser guardada no Ionic Storage.
-   */
+  // Lê a imagem escolhida no seletor de ficheiros e converte para base64
   public selecionarImagemFicheiro(event: Event): void {
     const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
 
-    if (!input.files || input.files.length === 0) {
-      return;
-    }
-
-    const ficheiro = input.files[0];
     const leitor = new FileReader();
-
     leitor.onload = () => {
       this.imagemSelecionada = leitor.result as string;
     };
-
-    leitor.readAsDataURL(ficheiro);
+    leitor.readAsDataURL(input.files[0]);
   }
 
-  /** Verifica se todos os campos obrigatórios estão preenchidos */
   private formularioValido(): boolean {
-    return !!(
-      this.titulo.trim() &&
-      this.descricao.trim() &&
-      this.preco &&
-      this.estadoConservacao &&
-      this.localizacao.trim() &&
-      this.imagemSelecionada
-    );
+    return !!(this.titulo.trim() && this.descricao.trim() && this.preco && this.imagemSelecionada);
   }
 
-  /**
-   * Publica o anúncio após validar o formulário.
-   * Usa o ID do utilizador com sessão ativa como vendedorId.
-   * Redireciona para a página de confirmação após publicar.
-   */
   public async publicarAnuncio(): Promise<void> {
     if (!this.formularioValido()) {
       await this.mostrarMensagem('Preenche todos os campos e adiciona uma foto.', 'warning');
       return;
     }
 
-    // Obter o ID do utilizador com sessão ativa
-    const utilizadorAtualId = await this.utilizadoresService.obterIdUtilizadorAtual();
+    const utilizadorId = await this.utilizadoresService.obterIdUtilizadorAtual();
 
     const novoAnuncio: Omit<Anuncio, 'id' | 'dataPublicacao'> = {
       moedaId: 0,
-      titulo: this.titulo,
-      descricao: this.descricao,
+      titulo: this.titulo.trim(),
+      descricao: this.descricao.trim(),
       preco: Number(this.preco),
       tipo: this.tipo,
       estadoConservacao: this.estadoConservacao,
-      localizacao: this.localizacao,
-      vendedorId: utilizadorAtualId,
+      localizacao: this.localizacao.trim(),
+      vendedorId: utilizadorId,
       imagens: [this.imagemSelecionada],
       favorito: false,
       publicadoPeloUtilizador: true
     };
 
-    const anuncioCriado = await this.anunciosService.criarAnuncio(novoAnuncio);
-
+    const criado = await this.anunciosService.criarAnuncio(novoAnuncio);
     await this.mostrarMensagem('Anúncio publicado com sucesso!', 'success');
-    this.router.navigateByUrl(`/anuncio-publicado/${anuncioCriado.id}`);
+
+    // limpar o formulário ANTES de navegar para que ao voltar esteja limpo
+    this.limparFormulario();
+    this.router.navigateByUrl(`/anuncio-publicado/${criado.id}`);
   }
 
-  /** Limpa todos os campos do formulário */
+  public limparFoto(): void {
+    this.imagemSelecionada = '';
+  }
+
   public limparFormulario(): void {
     this.titulo = '';
     this.descricao = '';
@@ -146,14 +132,12 @@ export class NovoAnuncioPage {
     this.imagemSelecionada = '';
   }
 
-  /** Mostra uma mensagem toast com a cor adequada */
-  private async mostrarMensagem(mensagem: string, cor: 'success' | 'warning' | 'dark' = 'dark'): Promise<void> {
+  private async mostrarMensagem(msg: string, cor: 'success' | 'warning' | 'dark' = 'dark'): Promise<void> {
     const toast = await this.toastController.create({
-      message: mensagem,
-      duration: 1800,
-      position: 'bottom',
-      color: cor
+      message: msg, duration: 1800, position: 'bottom', color: cor
     });
     await toast.present();
   }
 }
+
+// remove a foto selecionada
