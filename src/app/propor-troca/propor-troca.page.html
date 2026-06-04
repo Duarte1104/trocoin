@@ -5,6 +5,7 @@
         <ion-icon name="chevron-back-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
+
     <ion-title>Propor troca</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -13,133 +14,107 @@
 
   <div class="loading-area" *ngIf="carregando">
     <ion-spinner name="crescent"></ion-spinner>
+    <p>A carregar dados da troca...</p>
   </div>
 
-  <div class="wrapper" *ngIf="!carregando && anuncio as a">
+  <div class="empty-state" *ngIf="!carregando && !anuncioPretendido">
+    <ion-icon name="alert-circle-outline"></ion-icon>
+    <h2>Anúncio não encontrado</h2>
+    <p>Não foi possível carregar a moeda pretendida.</p>
+  </div>
 
-    <!-- Anúncio que o utilizador quer receber -->
-    <p class="section-label">Queres receber</p>
-    <div class="ad-card">
-      <img [src]="obterImagemPrincipal()" [alt]="a.titulo">
-      <div class="ad-card-info">
-        <p class="ad-card-title">{{ a.titulo }}</p>
-        <p class="ad-card-price">{{ formatarPreco(a.preco) }}</p>
-        <p class="ad-card-seller" *ngIf="vendedor">
-          <ion-icon name="person-outline"></ion-icon>
-          {{ vendedor.nome }}
-        </p>
+  <div class="trade-wrapper" *ngIf="!carregando && anuncioPretendido as a">
+
+    <div class="section-label">Queres receber</div>
+
+    <div class="coin-card">
+      <img [src]="obterImagemPrincipal(a)" [alt]="a.titulo">
+
+      <div>
+        <h2>{{ a.titulo }}</h2>
+        <p>{{ formatarPreco(a.preco) }}</p>
+        <span>Vendedor: {{ vendedor?.nome }}</span>
       </div>
     </div>
 
-    <!-- Seta -->
-    <div class="swap-arrow">
+    <div class="swap-icon">
       <ion-icon name="swap-vertical-outline"></ion-icon>
     </div>
 
-    <!-- Selecionar moeda própria -->
-    <p class="section-label">Ofereces em troca</p>
+    <div class="section-label">Ofereces em troca</div>
 
-    <!-- Se tiver anúncios próprios -->
-    <div *ngIf="meusAnuncios.length > 0">
-
-      <div
-        class="my-coin-card"
-        *ngFor="let meuAnuncio of meusAnuncios"
-        [class.selected]="anuncioSelecionadoId === meuAnuncio.id"
-        (click)="selecionarAnuncio(meuAnuncio.id)">
-
-        <img [src]="obterImagemAnuncio(meuAnuncio)" [alt]="meuAnuncio.titulo">
-
-        <div class="my-coin-info">
-          <p class="my-coin-title">{{ meuAnuncio.titulo }}</p>
-          <p class="my-coin-price">{{ formatarPreco(meuAnuncio.preco) }}</p>
-          <span class="estado-tag">{{ meuAnuncio.estadoConservacao }}</span>
-        </div>
-
-        <div class="check-icon" *ngIf="anuncioSelecionadoId === meuAnuncio.id">
-          <ion-icon name="checkmark-circle"></ion-icon>
-        </div>
-
-      </div>
-
-    </div>
-
-    <!-- Se não tiver anúncios -->
-    <div class="no-coins-note" *ngIf="meusAnuncios.length === 0">
-      <ion-icon name="albums-outline"></ion-icon>
-      <p>Ainda não tens anúncios publicados para oferecer.<br>Podes continuar só com dinheiro ou mensagem.</p>
-    </div>
-
-    <!-- Dinheiro extra -->
     <div class="form-card">
 
-      <div class="field">
-        <ion-label>
-          <ion-icon name="arrow-up-circle-outline" class="icon-oferecer"></ion-icon>
-          Dinheiro que ofereço (opcional)
-        </ion-label>
-        <p class="field-hint">A tua moeda vale menos? Adiciona dinheiro para equilibrar a troca.</p>
-        <div class="money-input oferecer">
-          <span class="euro-sign">€</span>
-          <ion-input
-            type="number"
-            [(ngModel)]="dinheiroAOferecer"
-            placeholder="0,00"
-            min="0">
-          </ion-input>
+      <ion-label>Escolhe uma das tuas moedas publicadas</ion-label>
+
+      <ion-select
+        [(ngModel)]="anuncioOferecidoId"
+        interface="popover"
+        placeholder="Selecionar moeda">
+
+        <ion-select-option
+          *ngFor="let anuncio of meusAnuncios"
+          [value]="anuncio.id">
+          {{ anuncio.titulo }} — {{ formatarPreco(anuncio.preco) }}
+        </ion-select-option>
+
+      </ion-select>
+
+      <small>
+        Só podes oferecer moedas que estejam publicadas por ti e ainda ativas.
+      </small>
+
+      <div class="offered-preview" *ngIf="obterAnuncioOferecido() as oferecido">
+        <img [src]="obterImagemPrincipal(oferecido)" [alt]="oferecido.titulo">
+
+        <div>
+          <h3>{{ oferecido.titulo }}</h3>
+          <p>{{ formatarPreco(oferecido.preco) }}</p>
+          <span>{{ oferecido.estadoConservacao }}</span>
         </div>
       </div>
 
-      <div class="field">
-        <ion-label>
-          <ion-icon name="arrow-down-circle-outline" class="icon-receber"></ion-icon>
-          Dinheiro que quero receber (opcional)
-        </ion-label>
-        <p class="field-hint">A tua moeda vale mais? Pede dinheiro de volta para equilibrar a troca.</p>
-        <div class="money-input receber">
-          <span class="euro-sign">€</span>
-          <ion-input
-            type="number"
-            [(ngModel)]="dinheiroAReceber"
-            placeholder="0,00"
-            min="0">
-          </ion-input>
-        </div>
-      </div>
+      <ion-label>Dinheiro extra que adicionas</ion-label>
 
-      <div class="field">
-        <ion-label>
-          <ion-icon name="chatbubble-outline"></ion-icon>
-          Mensagem ao vendedor (opcional)
-        </ion-label>
-        <ion-textarea
-          rows="3"
-          [(ngModel)]="descricaoTroca"
-          placeholder="Ex: Tenho fotos se quiser ver. Posso enviar por CTT.">
-        </ion-textarea>
-      </div>
+      <ion-input
+        type="number"
+        [(ngModel)]="valorExtraOferecido"
+        placeholder="0">
+      </ion-input>
+
+      <small>
+        Usa este campo se a tua moeda valer menos e quiseres equilibrar a troca.
+      </small>
+
+      <ion-label>Mensagem ao vendedor</ion-label>
+
+      <ion-textarea
+        rows="4"
+        [(ngModel)]="mensagem"
+        placeholder="Ex: Posso enviar mais fotos e combinar entrega por mensagem.">
+      </ion-textarea>
 
     </div>
 
-    <!-- Resumo da proposta -->
-    <div class="summary-card" *ngIf="anuncioSelecionadoId || (dinheiroAOferecer && dinheiroAOferecer > 0) || (dinheiroAReceber && dinheiroAReceber > 0)">
-      <p class="summary-title">Resumo da tua proposta</p>
-      <div class="summary-row" *ngIf="obterAnuncioSelecionado() as escolhido">
-        <span>Moeda oferecida</span>
-        <strong>{{ escolhido.titulo }}</strong>
-      </div>
-      <div class="summary-row oferecer-row" *ngIf="dinheiroAOferecer && dinheiroAOferecer > 0">
-        <span>Ofereço também</span>
-        <strong class="value-green">+ {{ formatarPreco(dinheiroAOferecer) }}</strong>
-      </div>
-      <div class="summary-row receber-row" *ngIf="dinheiroAReceber && dinheiroAReceber > 0">
-        <span>Peço de volta</span>
-        <strong class="value-blue">+ {{ formatarPreco(dinheiroAReceber) }}</strong>
-      </div>
+    <div class="warning-card" *ngIf="meusAnuncios.length === 0">
+      <ion-icon name="warning-outline"></ion-icon>
+      <p>
+        Ainda não tens moedas ativas para oferecer. Publica uma moeda primeiro.
+      </p>
     </div>
 
-    <ion-button expand="block" class="main-button" (click)="enviarPropostaTroca()">
-      <ion-icon name="swap-horizontal-outline" slot="start"></ion-icon>
+    <div class="info-card" *ngIf="meusAnuncios.length > 0">
+      <ion-icon name="information-circle-outline"></ion-icon>
+      <p>
+        O vendedor poderá aceitar ou recusar a tua proposta. Se aceitar, ambas as moedas deixam de aparecer na pesquisa.
+      </p>
+    </div>
+
+    <ion-button
+      expand="block"
+      class="main-button"
+      [disabled]="!podeEnviarProposta()"
+      (click)="enviarPropostaTroca()">
       Enviar proposta de troca
     </ion-button>
 

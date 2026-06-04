@@ -8,7 +8,7 @@
 
     <ion-title>Detalhe</ion-title>
 
-    <ion-buttons slot="end" *ngIf="anuncio">
+    <ion-buttons slot="end" *ngIf="anuncio && anuncioAtivo()">
       <ion-button fill="clear" (click)="alternarFavorito()">
         <ion-icon [name]="anuncio.favorito ? 'heart' : 'heart-outline'"></ion-icon>
       </ion-button>
@@ -27,10 +27,6 @@
     <ion-icon name="alert-circle-outline"></ion-icon>
     <h2>Anúncio não encontrado</h2>
     <p>Não foi possível encontrar este anúncio.</p>
-
-    <ion-button (click)="voltar()">
-      Voltar
-    </ion-button>
   </div>
 
   <div class="detail-wrapper" *ngIf="!carregando && anuncio as a">
@@ -42,16 +38,16 @@
     <div class="main-info">
       <div class="price-row">
         <div>
-          <h1>{{ formatarPreco(a.preco) }}</h1>
+          <h1>{{ obterPrecoPrincipal() }}</h1>
           <p>{{ obterTextoTipo() }}</p>
         </div>
 
-        <ion-chip>
-          <ion-label>{{ a.estadoConservacao }}</ion-label>
+        <ion-chip [class.sold-chip]="anuncioVendido() || anuncioTrocado()">
+          <ion-label>
+            {{ anuncioVendido() ? 'Vendido' : (anuncioTrocado() ? 'Trocado' : a.estadoConservacao) }}
+          </ion-label>
         </ion-chip>
-      </div>
-
-      <h2>{{ a.titulo }}</h2>
+      </div> <h2>{{ a.titulo }}</h2>
 
       <p class="location">
         <ion-icon name="location-outline"></ion-icon>
@@ -61,23 +57,27 @@
       <p class="date">
         Publicado em {{ a.dataPublicacao | date:'dd/MM/yyyy' }}
       </p>
+    </div> <div class="status-card" [class.sold]="anuncioVendido() || anuncioTrocado()">
+      <div class="status-icon">
+        <ion-icon [name]="anuncioVendido() ? 'checkmark-circle-outline' : 'information-circle-outline'"></ion-icon>
+      </div>
+
+      <div>
+        <h3>{{ obterTituloEstado() }}</h3>
+        <p>{{ obterTextoEstado() }}</p>
+      </div>
     </div>
 
     <div class="seller-card" *ngIf="vendedor">
       <div class="seller-avatar">
-        {{ vendedor.avatar || vendedor.nome.charAt(0) }}
+        {{ vendedor.avatar || vendedor.nome.charAt(0).toUpperCase() }}
       </div>
 
       <div class="seller-info">
         <h3>{{ vendedor.nome }}</h3>
         <p>@{{ vendedor.username }}</p>
-        <span>★★★★★ {{ vendedor.avaliacao || 5 }}/5</span>
+        <span>{{ obterTextoVendasVendedor() }}</span>
       </div>
-
-      <!-- Indicador de anúncio próprio -->
-      <ion-chip color="primary" *ngIf="anuncioMeu">
-        <ion-label>O teu anúncio</ion-label>
-      </ion-chip>
     </div>
 
     <div class="description-card">
@@ -102,15 +102,18 @@
         <span>Localização</span>
         <strong>{{ a.localizacao }}</strong>
       </div>
+
+      <div class="detail-line" *ngIf="anuncioVendido() || anuncioTrocado()">
+        <span>{{ anuncioTrocado() ? 'Valor estimado' : 'Preço final' }}</span>
+        <strong>{{ obterPrecoPrincipal() }}</strong>
+      </div>
     </div>
 
-    <!-- Ações disponíveis apenas para anúncios de outros utilizadores -->
-    <div class="actions-area" *ngIf="!anuncioMeu">
-
+    <div class="actions-area" *ngIf="anuncioAtivo() && !anuncioMeu()">
       <ion-button
         expand="block"
         class="main-button"
-        *ngIf="a.tipo === 'venda' || a.tipo === 'venda-troca'"
+        *ngIf="possoProporCompra()"
         (click)="proporCompra()">
         <ion-icon name="card-outline" slot="start"></ion-icon>
         Propor compra
@@ -119,27 +122,21 @@
       <ion-button
         expand="block"
         class="secondary-button"
-        *ngIf="a.tipo === 'troca' || a.tipo === 'venda-troca'"
+        *ngIf="possoProporTroca()"
         (click)="proporTroca()">
         <ion-icon name="swap-horizontal-outline" slot="start"></ion-icon>
         Propor troca
       </ion-button>
 
-      <ion-button expand="block" fill="outline" class="message-button" (click)="contactarVendedor()">
+      <ion-button
+        expand="block"
+        fill="outline"
+        class="message-button"
+        *ngIf="possoEnviarMensagem()"
+        (click)="contactarVendedor()">
         <ion-icon name="chatbubble-outline" slot="start"></ion-icon>
         Enviar mensagem
       </ion-button>
-
     </div>
 
-    <!-- Mensagem para o utilizador quando é o próprio anúncio -->
-    <div class="actions-area" *ngIf="anuncioMeu">
-      <ion-note class="own-ad-note">
-        <ion-icon name="information-circle-outline"></ion-icon>
-        Este é um dos teus anúncios.
-      </ion-note>
-    </div>
-
-  </div>
-
-</ion-content>
+  </div> </ion-content>

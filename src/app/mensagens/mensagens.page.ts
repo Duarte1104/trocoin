@@ -56,10 +56,10 @@ export class MensagensPage implements OnInit {
       conversasBase.map(async conversa => {
         const anuncio = await this.anunciosService.obterAnuncioPorId(conversa.anuncioId);
 
-        // o "outro utilizador" é quem não somos nós
-        const outroId = conversa.utilizadorId === this.utilizadorAtualId
-          ? conversa.outroUtilizadorId
-          : conversa.utilizadorId;
+        
+        const outroId = conversa.compradorId === this.utilizadorAtualId
+          ? conversa.vendedorId
+          : conversa.compradorId;
 
         const outroUtilizador = await this.utilizadoresService.obterUtilizadorPorId(outroId);
         const mensagens = await this.mensagensService.listarMensagensPorConversa(conversa.id);

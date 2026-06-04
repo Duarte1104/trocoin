@@ -5,6 +5,7 @@
         <ion-icon name="chevron-back-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
+
     <ion-title>Propor compra</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -13,56 +14,69 @@
 
   <div class="loading-area" *ngIf="carregando">
     <ion-spinner name="crescent"></ion-spinner>
+    <p>A carregar anúncio...</p>
   </div>
 
-  <div class="wrapper" *ngIf="!carregando && anuncio as a">
+  <div class="empty-state" *ngIf="!carregando && !anuncio">
+    <ion-icon name="alert-circle-outline"></ion-icon>
+    <h2>Anúncio não encontrado</h2>
+    <p>Não foi possível carregar este anúncio.</p>
+  </div>
 
-    <!-- Card do anúncio -->
-    <div class="ad-card">
+  <div class="proposal-wrapper" *ngIf="!carregando && anuncio as a">
+
+    <div class="coin-preview">
       <img [src]="obterImagemPrincipal()" [alt]="a.titulo">
-      <div class="ad-card-info">
-        <p class="ad-card-title">{{ a.titulo }}</p>
-        <p class="ad-card-price">{{ formatarPreco(a.preco) }}</p>
-        <p class="ad-card-seller" *ngIf="vendedor">
-          <ion-icon name="person-outline"></ion-icon>
-          {{ vendedor.nome }}
-        </p>
+
+      <div class="coin-info">
+        <h2>{{ a.titulo }}</h2>
+        <p>{{ formatarPreco(a.preco) }}</p>
+        <span>Vendedor: {{ vendedor?.nome }}</span>
       </div>
     </div>
 
-    <!-- Formulário -->
     <div class="form-card">
 
-      <div class="field">
-        <ion-label>Valor proposto (€)</ion-label>
-        <ion-input type="number" [(ngModel)]="valorProposto" placeholder="Ex: 14"></ion-input>
-      </div>
+      <ion-label>Valor da proposta</ion-label>
+      <ion-input
+        type="number"
+        [(ngModel)]="valorProposto"
+        placeholder="Ex: 12">
+      </ion-input>
 
-      <div class="field">
-        <ion-label>Método de pagamento</ion-label>
-        <ion-select [(ngModel)]="metodoPagamento" interface="popover">
-          <ion-select-option value="MB Way">MB Way</ion-select-option>
-          <ion-select-option value="Transferência bancária">Transferência bancária</ion-select-option>
-          <ion-select-option value="Pagamento presencial">Pagamento presencial</ion-select-option>
-          <ion-select-option value="A combinar">A combinar</ion-select-option>
-        </ion-select>
-      </div>
+      <small>
+        O valor tem de ser menor ou igual a {{ formatarPreco(a.preco) }}.
+      </small>
 
-      <div class="field">
-        <ion-label>Observações (opcional)</ion-label>
-        <ion-textarea rows="3" [(ngModel)]="observacoes" placeholder="Ex: Posso pagar hoje."></ion-textarea>
-      </div>
+      <ion-label>Mensagem ao vendedor</ion-label>
+      <ion-textarea
+        rows="4"
+        [(ngModel)]="mensagem"
+        placeholder="Ex: Posso pagar hoje e combinar entrega por mensagem.">
+      </ion-textarea>
 
     </div>
 
-    <div class="info-note">
+    <div class="info-card" *ngIf="podeEnviarProposta()">
       <ion-icon name="information-circle-outline"></ion-icon>
-      <p>A proposta será enviada ao vendedor pela conversa da app.</p>
+      <p>
+        Se o vendedor aceitar, vais poder efetuar um pagamento simulado na conversa.
+      </p>
     </div>
 
-    <ion-button expand="block" class="main-button" (click)="enviarPropostaCompra()">
-      <ion-icon name="card-outline" slot="start"></ion-icon>
-      Enviar proposta de compra
+    <div class="warning-card" *ngIf="!podeEnviarProposta()">
+      <ion-icon name="warning-outline"></ion-icon>
+      <p>
+        Verifica o valor da proposta. Não podes comprar o teu próprio anúncio nem propor um valor superior ao preço.
+      </p>
+    </div>
+
+    <ion-button
+      expand="block"
+      class="main-button"
+      [disabled]="!podeEnviarProposta()"
+      (click)="enviarPropostaCompra()">
+      Enviar proposta
     </ion-button>
 
   </div>

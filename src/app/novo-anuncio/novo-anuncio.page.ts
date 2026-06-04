@@ -16,7 +16,7 @@ export class NovoAnuncioPage {
   public titulo = '';
   public descricao = '';
   public preco: number | null = null;
-  public tipo: 'venda' | 'troca' | 'venda-troca' = 'venda';
+  public tipo: 'venda' | 'troca' = 'venda';
   public estadoConservacao = 'Bom';
   public localizacao = 'Viana do Castelo, Portugal';
   public imagemSelecionada = '';

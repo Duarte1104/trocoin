@@ -4,7 +4,7 @@
 
 .register-container {
   min-height: 100%;
-  padding: 28px 20px 40px;
+  padding: 28px 20px 36px;
   display: flex;
   flex-direction: column;
 }
@@ -12,57 +12,87 @@
 .top-area {
   position: relative;
   display: flex;
-  justify-content: center;
   align-items: center;
-  margin-bottom: 58px;
+  justify-content: center;
+  margin-bottom: 28px;
 }
 
 .back-button {
   position: absolute;
   left: -10px;
   --color: #ff5a00;
-  font-size: 20px;
 }
 
-.title-pill {
-  background: #9f9f9f;
-  color: #111111;
-  padding: 8px 28px;
-  border-radius: 14px;
-  font-size: 22px;
-  font-weight: 800;
+.brand-small {
+  color: #2f3848;
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: -1px;
+
+  span {
+    color: #ff5a00;
+  }
 }
 
-.form-area {
+.title-area {
+  margin-bottom: 20px;
+
+  h1 {
+    color: #ff5a00;
+    font-size: 30px;
+    font-weight: 900;
+    margin: 0 0 4px;
+  }
+
+  p {
+    color: #777777;
+    font-size: 13px;
+    font-weight: 700;
+    margin: 0;
+  }
+}
+
+.form-card {
+  background: #f5f5f5;
+  border-radius: 26px;
+  padding: 18px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+
   ion-label {
     display: block;
     color: #222222;
     font-size: 13px;
-    font-weight: 700;
-    margin-bottom: 8px;
-    margin-top: 18px;
+    font-weight: 900;
+    margin: 14px 0 8px;
   }
 }
 
 .custom-input {
-  --background: #a6a6a6;
-  --color: #ffffff;
-  --placeholder-color: #eeeeee;
-  --padding-start: 16px;
-  --padding-end: 16px;
-  border-radius: 14px;
-  min-height: 46px;
+  --background: #ffffff;
+  --color: #222222;
+  --placeholder-color: #b1b1b1;
+  --padding-start: 14px;
+  --padding-end: 12px;
+  border: 1px solid #eeeeee;
+  border-radius: 15px;
+  min-height: 48px;
   font-size: 14px;
+}
+
+.eye-button {
+  --color: #ff5a00;
+  --padding-start: 0;
+  --padding-end: 0;
 }
 
 .terms-area {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-top: 28px;
+  margin-top: 22px;
 
   ion-checkbox {
-    --size: 20px;
+    --size: 22px;
     --checkbox-background-checked: #ff5a00;
     --border-color-checked: #ff5a00;
   }
@@ -71,22 +101,28 @@
     margin: 0;
     color: #222222;
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 700;
   }
 
-  span {
+  button {
+    border: none;
+    background: transparent;
+    padding: 0;
     color: #ff5a00;
+    font-size: 13px;
+    font-weight: 900;
+    text-decoration: underline;
   }
 }
 
 .main-button {
-  --background: #9f9f9f;
-  --background-activated: #8b8b8b;
-  --color: #111111;
-  --border-radius: 14px;
-  height: 44px;
-  font-weight: 700;
+  --background: #ff5a00;
+  --background-activated: #e04f00;
+  --color: #ffffff;
+  --border-radius: 16px;
+  height: 48px;
+  font-weight: 900;
   text-transform: none;
-  margin: auto auto 28px;
-  max-width: 190px;
+  margin-top: 28px;
+  box-shadow: 0 6px 14px rgba(255, 90, 0, 0.30);
 }

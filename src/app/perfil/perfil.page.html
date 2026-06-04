@@ -3,7 +3,7 @@
   <div class="top-bar">
     <div>
       <h1>Perfil</h1>
-      <p>Conta, anúncios e preferências</p>
+      <p>Conta, moedas e atividade</p>
     </div>
 
     <ion-icon name="person-circle-outline"></ion-icon>
@@ -14,9 +14,9 @@
     <p>A carregar perfil...</p>
   </div>
 
-  <div class="profile-wrapper" *ngIf="!carregando">
+  <div class="profile-wrapper" *ngIf="!carregando && utilizador">
 
-    <div class="profile-card" *ngIf="utilizador">
+    <div class="profile-card">
       <div class="avatar">
         {{ obterAvatar() }}
       </div>
@@ -24,26 +24,42 @@
       <div class="profile-info">
         <h2>{{ utilizador.nome }}</h2>
         <p>@{{ utilizador.username }}</p>
-        <span>★★★★★ {{ utilizador.avaliacao || 5 }}/5</span>
+        <span>{{ obterTextoVendas() }}</span>
       </div>
+    </div>
+
+    <div class="wallet-card">
+      <div>
+        <p>Saldo disponível</p>
+        <h2>{{ formatarSaldo() }}</h2>
+      </div>
+
+      <ion-icon name="wallet-outline"></ion-icon>
     </div>
 
     <div class="stats-grid">
-      <div class="stat-card">
-        <strong>{{ meusAnuncios.length }}</strong>
-        <span>Anúncios</span>
-      </div>
+  <div class="stat-card">
+    <strong>{{ meusAnuncios.length }}</strong>
+    <span>Ativos</span>
+  </div>
 
-      <div class="stat-card">
-        <strong>{{ utilizador?.avaliacao || 5 }}</strong>
-        <span>Avaliação</span>
-      </div>
+  <div class="stat-card">
+    <strong>{{ moedasVendidas.length }}</strong>
+    <span>Vendidas</span>
+  </div>
 
-      <div class="stat-card">
-        <strong>PT</strong>
-        <span>País</span>
-      </div>
-    </div>
+  <div class="stat-card">
+    <strong>{{ moedasCompradas.length }}</strong>
+    <span>Compradas</span>
+  </div>
+</div>
+
+<div class="stats-grid single-stat">
+  <div class="stat-card">
+    <strong>{{ moedasTrocadas.length }}</strong>
+    <span>Trocadas</span>
+  </div>
+</div>
 
     <div class="actions-card">
       <ion-button expand="block" class="main-button" (click)="publicarNovoAnuncio()">
@@ -56,50 +72,110 @@
         Ajuda
       </ion-button>
 
-      <ion-button expand="block" fill="clear" class="clear-button" (click)="confirmarLimparDados()">
-        <ion-icon name="trash-outline" slot="start"></ion-icon>
-        Limpar dados locais
-      </ion-button>
-
       <ion-button expand="block" fill="clear" color="danger" class="logout-button" (click)="confirmarTerminarSessao()">
         <ion-icon name="log-out-outline" slot="start"></ion-icon>
         Terminar sessão
       </ion-button>
     </div>
 
-    <div class="section-title">
-      <h2>Os meus anúncios</h2>
-      <p>Anúncios criados por ti nesta app</p>
-    </div>
-
-    <div class="my-ads-list" *ngIf="meusAnuncios.length > 0">
-
-      <div
-        class="ad-card"
-        *ngFor="let anuncio of meusAnuncios"
-        (click)="abrirAnuncio(anuncio.id)">
-
-        <img [src]="obterImagemPrincipal(anuncio)" [alt]="anuncio.titulo">
-
-        <div class="ad-info">
-          <h3>{{ anuncio.titulo }}</h3>
-          <p>{{ formatarPreco(anuncio.preco) }}</p>
-          <span>{{ anuncio.estadoConservacao }} · {{ anuncio.tipo }}</span>
-        </div>
-
-        <ion-icon name="chevron-forward-outline"></ion-icon>
+    <div class="section-block">
+      <div class="section-title">
+        <h2>Os meus anúncios</h2>
+        <p>Moedas que tens atualmente publicadas</p>
       </div>
 
+      <div class="list-card" *ngIf="meusAnuncios.length > 0">
+        <div class="ad-card" *ngFor="let anuncio of meusAnuncios" (click)="abrirAnuncio(anuncio.id)">
+          <img [src]="obterImagemPrincipal(anuncio)" [alt]="anuncio.titulo">
+
+          <div>
+            <h3>{{ anuncio.titulo }}</h3>
+            <p>{{ formatarPreco(anuncio.preco) }}</p>
+            <span>{{ anuncio.estadoConservacao }} · {{ anuncio.tipo }}</span>
+          </div>
+
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </div>
+      </div>
+
+      <div class="empty-mini" *ngIf="meusAnuncios.length === 0">
+        Ainda não tens anúncios ativos.
+      </div>
     </div>
 
-    <div class="empty-ads" *ngIf="meusAnuncios.length === 0">
-      <ion-icon name="albums-outline"></ion-icon>
-      <h2>Ainda não publicaste anúncios</h2>
-      <p>Publica uma moeda para vender ou trocar com outros colecionadores.</p>
+    <div class="section-block">
+      <div class="section-title">
+        <h2>Moedas compradas</h2>
+        <p>Compras concluídas através da Trocoin</p>
+      </div>
 
-      <ion-button (click)="publicarNovoAnuncio()">
-        Publicar anúncio
-      </ion-button>
+      <div class="list-card" *ngIf="moedasCompradas.length > 0">
+        <div class="ad-card" *ngFor="let anuncio of moedasCompradas" (click)="abrirAnuncio(anuncio.id)">
+          <img [src]="obterImagemPrincipal(anuncio)" [alt]="anuncio.titulo">
+
+          <div>
+            <h3>{{ anuncio.titulo }}</h3>
+            <p>{{ formatarPreco(anuncio.precoFinal || anuncio.preco) }}</p>
+            <span>Compra concluída</span>
+          </div>
+
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+        </div>
+      </div>
+
+      <div class="empty-mini" *ngIf="moedasCompradas.length === 0">
+        Ainda não compraste moedas.
+      </div>
+    </div>
+
+    <div class="section-block">
+  <div class="section-title">
+    <h2>Moedas trocadas</h2>
+    <p>Moedas envolvidas em trocas concluídas</p>
+  </div>
+
+  <div class="list-card" *ngIf="moedasTrocadas.length > 0">
+    <div class="ad-card" *ngFor="let anuncio of moedasTrocadas" (click)="abrirAnuncio(anuncio.id)">
+      <img [src]="obterImagemPrincipal(anuncio)" [alt]="anuncio.titulo">
+
+      <div>
+        <h3>{{ anuncio.titulo }}</h3>
+        <p>{{ formatarPreco(anuncio.precoFinal || anuncio.preco) }}</p>
+        <span>Troca concluída</span>
+      </div>
+
+      <ion-icon name="swap-horizontal-outline"></ion-icon>
+    </div>
+  </div>
+
+  <div class="empty-mini" *ngIf="moedasTrocadas.length === 0">
+    Ainda não concluíste trocas.
+  </div>
+</div>
+
+    <div class="section-block">
+      <div class="section-title">
+        <h2>Moedas vendidas</h2>
+        <p>Vendas concluídas e saldo recebido</p>
+      </div>
+
+      <div class="list-card" *ngIf="moedasVendidas.length > 0">
+        <div class="ad-card" *ngFor="let anuncio of moedasVendidas" (click)="abrirAnuncio(anuncio.id)">
+          <img [src]="obterImagemPrincipal(anuncio)" [alt]="anuncio.titulo">
+
+          <div>
+            <h3>{{ anuncio.titulo }}</h3>
+            <p>{{ formatarPreco(anuncio.precoFinal || anuncio.preco) }}</p>
+            <span>Venda concluída</span>
+          </div>
+
+          <ion-icon name="cash-outline"></ion-icon>
+        </div>
+      </div>
+
+      <div class="empty-mini" *ngIf="moedasVendidas.length === 0">
+        Ainda não vendeste moedas.
+      </div>
     </div>
 
   </div>

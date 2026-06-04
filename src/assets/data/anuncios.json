@@ -5,13 +5,14 @@
     "titulo": "1 Euro Espanha 1988 - Rara",
     "descricao": "Moeda rara em muito bom estado. Ideal para completar coleção europeia. Cunhagem limitada, difícil de encontrar em bom estado.",
     "preco": 15,
-    "tipo": "venda-troca",
+    "tipo": "venda",
     "estadoConservacao": "Muito Bom",
     "localizacao": "Portugal, Viana do Castelo",
     "vendedorId": 2,
     "imagens": ["assets/img/moedas/moeda-ouro.png"],
     "favorito": false,
     "publicadoPeloUtilizador": false,
+    "estadoAnuncio": "ativo",
     "dataPublicacao": "2026-05-01",
     "ano": 1988
   },
@@ -28,6 +29,7 @@
     "imagens": ["assets/img/moedas/moeda-prata.png"],
     "favorito": false,
     "publicadoPeloUtilizador": false,
+    "estadoAnuncio": "ativo",
     "dataPublicacao": "2026-05-02",
     "ano": 1988
   },
@@ -44,6 +46,7 @@
     "imagens": ["assets/img/moedas/moeda-dourada.png"],
     "favorito": false,
     "publicadoPeloUtilizador": false,
+    "estadoAnuncio": "ativo",
     "dataPublicacao": "2026-05-03",
     "ano": 1910
   },
@@ -60,6 +63,7 @@
     "imagens": ["assets/img/moedas/moeda-prata.png"],
     "favorito": false,
     "publicadoPeloUtilizador": false,
+    "estadoAnuncio": "ativo",
     "dataPublicacao": "2026-05-04",
     "ano": 1963
   },
@@ -69,13 +73,14 @@
     "titulo": "2 Euro Alemanha 2002 - 1ª série",
     "descricao": "Primeira emissão do euro alemão. Estado excelente, nunca circulou. Peça de coleção.",
     "preco": 45,
-    "tipo": "venda-troca",
+    "tipo": "venda",
     "estadoConservacao": "Excelente",
     "localizacao": "Coimbra, Portugal",
     "vendedorId": 2,
     "imagens": ["assets/img/moedas/moeda-ouro.png"],
     "favorito": false,
     "publicadoPeloUtilizador": false,
+    "estadoAnuncio": "ativo",
     "dataPublicacao": "2026-05-05",
     "ano": 2002
   },
@@ -92,6 +97,7 @@
     "imagens": ["assets/img/moedas/moeda-prata.png"],
     "favorito": false,
     "publicadoPeloUtilizador": false,
+    "estadoAnuncio": "ativo",
     "dataPublicacao": "2026-05-06",
     "ano": 1921
   },
@@ -108,6 +114,7 @@
     "imagens": ["assets/img/moedas/moeda-dourada.png"],
     "favorito": false,
     "publicadoPeloUtilizador": false,
+    "estadoAnuncio": "ativo",
     "dataPublicacao": "2026-05-07",
     "ano": 2005
   },
@@ -117,13 +124,14 @@
     "titulo": "Florim Holandês 1979",
     "descricao": "Gulden holandês de prata. Estado muito bom, bonita peça para coleção europeia.",
     "preco": 18,
-    "tipo": "venda-troca",
+    "tipo": "troca",
     "estadoConservacao": "Muito Bom",
     "localizacao": "Aveiro, Portugal",
     "vendedorId": 3,
     "imagens": ["assets/img/moedas/moeda-prata.png"],
     "favorito": false,
     "publicadoPeloUtilizador": false,
+    "estadoAnuncio": "ativo",
     "dataPublicacao": "2026-05-08",
     "ano": 1979
   }

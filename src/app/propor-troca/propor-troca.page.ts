@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
+
 import { Anuncio } from '../models/anuncio';
 import { Utilizador } from '../models/utilizador';
+
 import { AnunciosService } from '../services/anuncios.service';
 import { UtilizadoresService } from '../services/utilizadores.service';
-import { MensagensService } from '../services/mensagens.service';
+import { PropostasService } from '../services/propostas.service';
 
 @Component({
   selector: 'app-propor-troca',
@@ -14,132 +16,145 @@ import { MensagensService } from '../services/mensagens.service';
   standalone: false
 })
 export class ProporTrocaPage implements OnInit {
-  public anuncio?: Anuncio;
+  public anuncioPretendido?: Anuncio;
   public vendedor?: Utilizador;
-  public carregando = true;
+  public utilizadorAtual?: Utilizador;
 
-  // anúncios do utilizador atual para oferecer na troca
   public meusAnuncios: Anuncio[] = [];
+  public anuncioOferecidoId: number | null = null;
+  public valorExtraOferecido: number | null = 0;
+  public mensagem = '';
 
-  // id do anúncio selecionado para oferecer
-  public anuncioSelecionadoId: number | null = null;
-
-  // dinheiro que o utilizador oferece além da moeda (a minha moeda vale menos)
-  public dinheiroAOferecer: number | null = null;
-
-  // dinheiro que o utilizador quer receber além da moeda (a minha moeda vale mais)
-  public dinheiroAReceber: number | null = null;
-
-  // mensagem opcional ao vendedor
-  public descricaoTroca = '';
+  public carregando = true;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private toastController: ToastController,
     private anunciosService: AnunciosService,
     private utilizadoresService: UtilizadoresService,
-    private mensagensService: MensagensService,
-    private toastController: ToastController
+    private propostasService: PropostasService
   ) {}
 
   public async ngOnInit(): Promise<void> {
-    await this.carregar();
+    await this.carregarDados();
   }
 
-  private async carregar(): Promise<void> {
+  private async carregarDados(): Promise<void> {
     this.carregando = true;
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    if (!id) { this.carregando = false; return; }
 
-    this.anuncio = await this.anunciosService.obterAnuncioPorId(id);
+    const anuncioId = Number(this.route.snapshot.paramMap.get('id'));
+    this.utilizadorAtual = await this.utilizadoresService.obterUtilizadorAtual();
 
-    if (this.anuncio) {
-      this.vendedor = await this.utilizadoresService.obterUtilizadorPorId(this.anuncio.vendedorId);
+    if (!anuncioId || !this.utilizadorAtual) {
+      this.carregando = false;
+      return;
+    }
 
-      // carregar os próprios anúncios para oferecer na troca
-      const meuId = await this.utilizadoresService.obterIdUtilizadorAtual();
-      const todos = await this.anunciosService.listarAnuncios();
-      this.meusAnuncios = todos.filter(a =>
-        (a.vendedorId === meuId || a.publicadoPeloUtilizador) && a.id !== id
+    this.anuncioPretendido = await this.anunciosService.obterAnuncioPorId(anuncioId);
+
+    if (this.anuncioPretendido) {
+      this.vendedor = await this.utilizadoresService.obterUtilizadorPorId(
+        this.anuncioPretendido.vendedorId
       );
     }
+
+    const anunciosDoUtilizador = await this.anunciosService.listarAnunciosDoUtilizador(
+      this.utilizadorAtual.id
+    );
+
+    this.meusAnuncios = anunciosDoUtilizador.filter(anuncio =>
+      anuncio.id !== anuncioId &&
+      (anuncio.estadoAnuncio || 'ativo') === 'ativo'
+    );
 
     this.carregando = false;
   }
 
   public voltar(): void {
-    if (this.anuncio) {
-      this.router.navigateByUrl(`/detalhe-anuncio/${this.anuncio.id}`);
-    } else {
-      this.router.navigateByUrl('/tabs/pesquisar');
-    }
-  }
-
-  public obterAnuncioSelecionado(): Anuncio | undefined {
-    return this.meusAnuncios.find(a => a.id === this.anuncioSelecionadoId);
-  }
-
-  public selecionarAnuncio(id: number): void {
-    // se clicar no mesmo, deseleciona
-    this.anuncioSelecionadoId = this.anuncioSelecionadoId === id ? null : id;
-  }
-
-  public async enviarPropostaTroca(): Promise<void> {
-    if (!this.anuncio) return;
-
-    if (!this.anuncioSelecionadoId && !this.descricaoTroca.trim()) {
-      const t = await this.toastController.create({
-        message: 'Seleciona uma das tuas moedas ou escreve uma mensagem.',
-        duration: 2200, position: 'bottom', color: 'warning'
-      });
-      await t.present();
+    if (this.anuncioPretendido) {
+      this.router.navigateByUrl(`/detalhe-anuncio/${this.anuncioPretendido.id}`);
       return;
     }
 
-    const meuId = await this.utilizadoresService.obterIdUtilizadorAtual();
-    const conversa = await this.mensagensService.criarConversa(
-      this.anuncio.id, this.anuncio.vendedorId, meuId
+    this.router.navigateByUrl('/tabs/pesquisar');
+  }
+
+  public podeEnviarProposta(): boolean {
+    if (!this.anuncioPretendido || !this.utilizadorAtual || !this.anuncioOferecidoId) {
+      return false;
+    }
+
+    return (
+      this.anuncioPretendido.tipo === 'troca' &&
+      this.anuncioPretendido.vendedorId !== this.utilizadorAtual.id &&
+      (this.anuncioPretendido.estadoAnuncio || 'ativo') === 'ativo'
+    );
+  }
+
+  public obterAnuncioOferecido(): Anuncio | undefined {
+    if (!this.anuncioOferecidoId) {
+      return undefined;
+    }
+
+    return this.meusAnuncios.find(anuncio => anuncio.id === Number(this.anuncioOferecidoId));
+  }
+
+  public async enviarPropostaTroca(): Promise<void> {
+    if (!this.anuncioPretendido || !this.utilizadorAtual || !this.anuncioOferecidoId) {
+      await this.mostrarMensagem('Escolhe uma moeda tua para oferecer em troca.');
+      return;
+    }
+
+    const anuncioOferecido = await this.anunciosService.obterAnuncioPorId(
+      Number(this.anuncioOferecidoId)
     );
 
-    const escolhido = this.obterAnuncioSelecionado();
-    let texto = '🔄 Proposta de troca: ';
-
-    if (escolhido) {
-      texto += `"${escolhido.titulo}" (${this.formatarPreco(escolhido.preco)}, estado: ${escolhido.estadoConservacao})`;
+    if (!anuncioOferecido) {
+      await this.mostrarMensagem('Não foi possível encontrar a moeda oferecida.');
+      return;
     }
 
-    if (this.dinheiroAOferecer && this.dinheiroAOferecer > 0) {
-      texto += escolhido
-        ? ` + ${this.formatarPreco(this.dinheiroAOferecer)} que ofereço`
-        : `${this.formatarPreco(this.dinheiroAOferecer)} que ofereço`;
-    }
-
-    if (this.dinheiroAReceber && this.dinheiroAReceber > 0) {
-      texto += escolhido
-        ? ` + peço ${this.formatarPreco(this.dinheiroAReceber)} de volta`
-        : `Peço ${this.formatarPreco(this.dinheiroAReceber)} de volta`;
-    }
-
-    if (this.descricaoTroca.trim()) {
-      texto += `. Mensagem: ${this.descricaoTroca}`;
-    }
-
-    await this.mensagensService.enviarMensagem(
-      conversa.id, this.anuncio.id, meuId, texto, 'proposta-troca'
+    const proposta = await this.propostasService.criarPropostaTroca(
+      this.anuncioPretendido,
+      anuncioOferecido,
+      this.utilizadorAtual.id,
+      Number(this.valorExtraOferecido || 0),
+      this.mensagem.trim()
     );
 
-    this.router.navigateByUrl(`/confirmacao-troca/${this.anuncio.id}`);
+    if (!proposta) {
+      await this.mostrarMensagem('Não foi possível enviar a proposta. Verifica se já existe uma proposta em aberto.');
+      return;
+    }
+
+    await this.mostrarMensagem('Proposta de troca enviada ao vendedor.');
+    this.router.navigateByUrl(`/conversa/${proposta.conversaId}`);
   }
 
-  public formatarPreco(p: number): string {
-    return new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR' }).format(p);
+  public obterImagemPrincipal(anuncio?: Anuncio): string {
+    if (!anuncio || !anuncio.imagens || anuncio.imagens.length === 0) {
+      return 'assets/img/moedas/moeda-ouro.png';
+    }
+
+    return anuncio.imagens[0];
   }
 
-  public obterImagemAnuncio(a: Anuncio): string {
-    return a.imagens?.length ? a.imagens[0] : 'assets/img/moedas/moeda-ouro.png';
+  public formatarPreco(preco: number): string {
+    return new Intl.NumberFormat('pt-PT', {
+      style: 'currency',
+      currency: 'EUR'
+    }).format(preco);
   }
 
-  public obterImagemPrincipal(): string {
-    return this.anuncio?.imagens?.length ? this.anuncio.imagens[0] : 'assets/img/moedas/moeda-ouro.png';
+  private async mostrarMensagem(mensagem: string): Promise<void> {
+    const toast = await this.toastController.create({
+      message: mensagem,
+      duration: 1800,
+      position: 'bottom',
+      color: 'dark'
+    });
+
+    await toast.present();
   }
 }

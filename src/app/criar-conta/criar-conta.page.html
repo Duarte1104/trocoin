@@ -7,12 +7,17 @@
         <ion-icon name="chevron-back-outline"></ion-icon>
       </ion-button>
 
-      <div class="title-pill">
-        Criar conta
+      <div class="brand-small">
+        trocoin<span>•</span>
       </div>
     </div>
 
-    <div class="form-area">
+    <div class="title-area">
+      <h1>Criar conta</h1>
+      <p>Cria o teu perfil de colecionador</p>
+    </div>
+
+    <div class="form-card">
 
       <ion-label>Nome completo</ion-label>
       <ion-input
@@ -36,9 +41,11 @@
         placeholder="Mínimo 6 caracteres"
         [(ngModel)]="senha"
         class="custom-input">
-        <ion-button fill="clear" slot="end" (click)="alternarVisibilidadeSenha()">
+
+        <ion-button fill="clear" slot="end" class="eye-button" (click)="alternarVisibilidadeSenha()">
           <ion-icon [name]="mostrarSenha ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
         </ion-button>
+
       </ion-input>
 
       <ion-label>Confirmar palavra-passe</ion-label>
@@ -51,14 +58,20 @@
 
       <div class="terms-area">
         <ion-checkbox [(ngModel)]="termosAceites"></ion-checkbox>
-        <p>Aceito os <span>termos e condições</span></p>
+
+        <p>
+          Aceito os
+          <button type="button" (click)="abrirTermos()">
+            termos e condições
+          </button>
+        </p>
       </div>
 
-    </div>
+      <ion-button expand="block" class="main-button" (click)="criarConta()">
+        Criar conta
+      </ion-button>
 
-    <ion-button expand="block" class="main-button" (click)="criarConta()">
-      Criar conta
-    </ion-button>
+    </div>
 
   </div>
 

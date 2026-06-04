@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { ToastController, LoadingController } from '@ionic/angular';
+import { ToastController, LoadingController, AlertController } from '@ionic/angular';
 import { UtilizadoresService } from '../services/utilizadores.service';
 
 @Component({
@@ -32,7 +32,8 @@ export class CriarContaPage {
     private router: Router,
     private utilizadoresService: UtilizadoresService,
     private toastController: ToastController,
-    private loadingController: LoadingController
+    private loadingController: LoadingController,
+    private alertController: AlertController
   ) {}
 
   /** Volta para o ecrã de login */
@@ -44,6 +45,30 @@ export class CriarContaPage {
   public alternarVisibilidadeSenha(): void {
     this.mostrarSenha = !this.mostrarSenha;
   }
+
+
+  public async abrirTermos(): Promise<void> {
+  const alerta = await this.alertController.create({
+    header: 'Termos e condições',
+    message:
+      'Ao criar conta na Trocoin, comprometes-te a publicar apenas anúncios reais, usar fotografias adequadas, comunicar com respeito com outros colecionadores e combinar compras ou trocas de forma responsável. A Trocoin funciona como protótipo académico e os dados são guardados localmente no dispositivo.',
+    buttons: [
+      {
+        text: 'Fechar',
+        role: 'cancel'
+      },
+      {
+        text: 'Aceitar',
+        handler: () => {
+          this.termosAceites = true;
+        }
+      }
+    ]
+  });
+
+  await alerta.present();
+}
+
 
   /**
    * Valida os campos e cria uma nova conta, guardando o utilizador no Ionic Storage.

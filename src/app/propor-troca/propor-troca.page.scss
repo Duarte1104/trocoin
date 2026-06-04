@@ -1,148 +1,254 @@
-ion-toolbar { --background: #fff; --color: #222; }
-ion-toolbar ion-button { --color: #ff5a00; }
-ion-title { font-size: 16px; font-weight: 800; }
-.page-content { --background: #f2f2f2; }
-
-.loading-area {
-  display: flex; justify-content: center; padding-top: 80px;
-  ion-spinner { color: #ff5a00; }
+ion-toolbar {
+  --background: #ffffff;
+  --color: #222222;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
-.wrapper { padding: 14px 14px 100px; }
+ion-title {
+  font-size: 16px;
+  font-weight: 900;
+}
+
+ion-toolbar ion-button {
+  --color: #ff5a00;
+}
+
+.page-content {
+  --background: #ffffff;
+}
+
+.loading-area,
+.empty-state {
+  min-height: 70vh;
+  padding: 32px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  ion-spinner,
+  ion-icon {
+    color: #ff5a00;
+    margin: 0 auto 12px;
+  }
+
+  ion-icon {
+    font-size: 50px;
+  }
+
+  h2 {
+    color: #222222;
+    font-size: 20px;
+    font-weight: 900;
+    margin: 0 0 8px;
+  }
+
+  p {
+    color: #777777;
+    font-size: 14px;
+    margin: 0;
+  }
+}
+
+.trade-wrapper {
+  padding: 16px 16px 34px;
+}
 
 .section-label {
-  font-size: 11px; font-weight: 800; color: #999;
-  text-transform: uppercase; letter-spacing: 0.8px;
-  margin: 0 2px 8px;
+  color: #999999;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin: 0 0 8px 2px;
 }
 
-// card do anúncio que quer receber
-.ad-card {
-  display: flex; align-items: center; gap: 12px;
-  background: #fff; border-radius: 16px; padding: 12px; margin-bottom: 8px;
-  img {
-    width: 68px; height: 68px; min-width: 68px;
-    border-radius: 12px; background: #f0ece3; object-fit: contain; padding: 6px;
-  }
-}
-.ad-card-info { flex: 1; }
-.ad-card-title { font-size: 14px; font-weight: 700; color: #222; margin: 0 0 4px; }
-.ad-card-price { font-size: 17px; font-weight: 900; color: #ff5a00; margin: 0 0 4px; }
-.ad-card-seller {
-  font-size: 12px; color: #888; margin: 0;
-  display: flex; align-items: center; gap: 3px;
-  ion-icon { font-size: 13px; }
-}
-
-// seta de troca
-.swap-arrow {
-  display: flex; justify-content: center; padding: 6px 0 10px;
-  ion-icon { font-size: 28px; color: #ff5a00; }
-}
-
-// cards das moedas do utilizador
-.my-coin-card {
-  display: flex; align-items: center; gap: 12px;
-  background: #fff; border-radius: 14px; padding: 10px 12px;
-  margin-bottom: 8px; cursor: pointer;
-  border: 2px solid transparent;
-  transition: border-color 0.15s, background 0.15s;
-  position: relative;
+.coin-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f5f5f5;
+  border-radius: 20px;
+  padding: 12px;
+  margin-bottom: 14px;
 
   img {
-    width: 56px; height: 56px; min-width: 56px;
-    border-radius: 10px; background: #f0ece3; object-fit: contain; padding: 5px;
+    width: 74px;
+    height: 74px;
+    object-fit: cover;
+    background: #ded6c3;
+    border-radius: 16px;
   }
 
-  &.selected {
-    border-color: #ff5a00;
-    background: #fff8f5;
+  div {
+    flex: 1;
+    min-width: 0;
+  }
+
+  h2 {
+    color: #222222;
+    font-size: 16px;
+    font-weight: 900;
+    line-height: 1.25;
+    margin: 0 0 4px;
+  }
+
+  p {
+    color: #ff5a00;
+    font-size: 18px;
+    font-weight: 900;
+    margin: 0 0 4px;
+  }
+
+  span {
+    color: #777777;
+    font-size: 12px;
+    font-weight: 700;
   }
 }
 
-.my-coin-info { flex: 1; }
-.my-coin-title { font-size: 13px; font-weight: 700; color: #222; margin: 0 0 3px; }
-.my-coin-price { font-size: 15px; font-weight: 800; color: #ff5a00; margin: 0 0 4px; }
-.estado-tag {
-  background: #f0f0f0; color: #666;
-  font-size: 10px; font-weight: 700;
-  padding: 2px 7px; border-radius: 6px;
+.swap-icon {
+  width: 42px;
+  height: 42px;
+  background: #fff1e8;
+  color: #ff5a00;
+  border-radius: 50%;
+  margin: -4px auto 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ion-icon {
+    font-size: 25px;
+  }
 }
 
-.check-icon {
-  position: absolute; top: 8px; right: 10px;
-  ion-icon { font-size: 22px; color: #ff5a00; }
-}
-
-// nota sem moedas
-.no-coins-note {
-  background: #fff; border-radius: 14px; padding: 16px;
-  margin-bottom: 12px; text-align: center;
-  ion-icon { font-size: 32px; color: #ddd; display: block; margin: 0 auto 8px; }
-  p { font-size: 13px; color: #aaa; margin: 0; line-height: 1.4; }
-}
-
-// formulário
 .form-card {
-  background: #fff; border-radius: 16px; padding: 14px 16px;
-  margin: 12px 0; display: flex; flex-direction: column; gap: 16px;
-}
-
-.field {
-  display: flex; flex-direction: column; gap: 5px;
+  background: #f5f5f5;
+  border-radius: 20px;
+  padding: 14px;
+  margin-bottom: 14px;
 
   ion-label {
-    font-size: 13px; font-weight: 700; color: #333;
-    display: flex; align-items: center; gap: 5px;
-    ion-icon { color: #ff5a00; font-size: 16px; }
+    display: block;
+    color: #222222;
+    font-size: 13px;
+    font-weight: 900;
+    margin: 12px 0 8px;
   }
 
-  .field-hint { font-size: 12px; color: #aaa; margin: 0 0 6px; line-height: 1.3; }
-
+  ion-select,
+  ion-input,
   ion-textarea {
-    --background: #f5f5f5; --color: #222; --placeholder-color: #bbb;
-    --padding-start: 12px; --padding-end: 12px;
-    border-radius: 10px; font-size: 14px;
+    --background: #ffffff;
+    --color: #222222;
+    --placeholder-color: #999999;
+    --padding-start: 12px;
+    --padding-end: 12px;
+    border-radius: 14px;
+    border: 1px solid #eeeeee;
+    font-size: 14px;
+  }
+
+  small {
+    display: block;
+    color: #777777;
+    font-size: 12px;
+    line-height: 1.35;
+    margin: 8px 0 4px;
   }
 }
 
-// input de dinheiro com símbolo €
-.money-input {
-  display: flex; align-items: center;
-  background: #f5f5f5; border-radius: 10px;
-  padding-left: 12px;
+.offered-preview {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 10px;
+  margin-top: 12px;
 
-  .euro-sign { font-size: 16px; font-weight: 700; color: #444; margin-right: 4px; }
-
-  ion-input {
-    --background: transparent; --color: #222; --placeholder-color: #bbb;
-    --padding-start: 0; font-size: 16px; font-weight: 700;
+  img {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    background: #ded6c3;
+    border-radius: 14px;
   }
 
-  &.oferecer { border-left: 3px solid #3d8b3d; }
-  &.receber  { border-left: 3px solid #1a6dc0; }
+  h3 {
+    color: #222222;
+    font-size: 13px;
+    font-weight: 900;
+    margin: 0 0 3px;
+  }
+
+  p {
+    color: #ff5a00;
+    font-size: 14px;
+    font-weight: 900;
+    margin: 0 0 3px;
+  }
+
+  span {
+    color: #777777;
+    font-size: 11px;
+    font-weight: 700;
+  }
 }
 
-.icon-oferecer { color: #3d8b3d !important; }
-.icon-receber  { color: #1a6dc0 !important; }
+.info-card,
+.warning-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: 16px;
+  padding: 12px;
+  margin-bottom: 16px;
 
-.value-green { color: #3d8b3d !important; }
-.value-blue  { color: #1a6dc0 !important; }
+  ion-icon {
+    font-size: 22px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
 
-// resumo da proposta
-.summary-card {
-  background: #fff8f5; border: 1.5px solid #ff5a00;
-  border-radius: 14px; padding: 12px 14px; margin-bottom: 14px;
+  p {
+    font-size: 13px;
+    line-height: 1.4;
+    margin: 0;
+  }
 }
-.summary-title { font-size: 12px; font-weight: 800; color: #ff5a00; margin: 0 0 10px; text-transform: uppercase; }
-.summary-row {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 4px 0;
-  span { font-size: 13px; color: #888; }
-  strong { font-size: 13px; color: #222; max-width: 60%; text-align: right; }
+
+.info-card {
+  background: #fff1e8;
+
+  ion-icon {
+    color: #ff5a00;
+  }
+
+  p {
+    color: #555555;
+  }
+}
+
+.warning-card {
+  background: #fff0eb;
+
+  ion-icon {
+    color: #d9480f;
+  }
+
+  p {
+    color: #9a3412;
+  }
 }
 
 .main-button {
-  --background: #222; --color: #fff; --border-radius: 14px;
-  font-weight: 800; text-transform: none; height: 50px; font-size: 15px;
+  height: 48px;
+  --background: #222222;
+  --color: #ffffff;
+  --border-radius: 16px;
+  text-transform: none;
+  font-weight: 900;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.20);
 }

@@ -2,12 +2,12 @@
 
   <div class="login-container">
 
-    <div class="logo-area">
-      <h1>Trocoin</h1>
+    <div class="brand-area">
+      <h1>trocoin<span>•</span></h1>
       <p>Compra, vende e troca moedas</p>
     </div>
 
-    <div class="form-area">
+    <div class="form-card">
 
       <ion-label>Email</ion-label>
       <ion-input
@@ -23,23 +23,27 @@
         placeholder="********"
         [(ngModel)]="senha"
         class="custom-input">
-        <ion-button fill="clear" slot="end" (click)="alternarVisibilidadeSenha()">
+
+        <ion-button fill="clear" slot="end" class="eye-button" (click)="alternarVisibilidadeSenha()">
           <ion-icon [name]="mostrarSenha ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
         </ion-button>
+
       </ion-input>
 
-    </div>
-
-    <div class="actions-area">
       <ion-button expand="block" class="main-button" (click)="entrar()">
         Entrar
       </ion-button>
 
-      <p class="separator">ou</p>
+      <div class="separator">
+        <span></span>
+        <p>ou</p>
+        <span></span>
+      </div>
 
-      <ion-button expand="block" class="secondary-button" (click)="criarConta()">
+      <ion-button expand="block" fill="outline" class="secondary-button" (click)="criarConta()">
         Criar conta
       </ion-button>
+
     </div>
 
   </div>

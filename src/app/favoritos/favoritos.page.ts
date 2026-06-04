@@ -38,7 +38,15 @@ export class FavoritosPage implements OnInit {
   private async carregarFavoritos(): Promise<void> {
     this.carregando = true;
 
-    const favoritos = await this.anunciosService.listarFavoritos();
+    const utilizadorAtual = await this.utilizadoresService.obterUtilizadorAtual();
+
+      if (!utilizadorAtual) {
+        this.favoritos = [];
+        this.carregando = false;
+        return;
+      }
+
+const favoritos = await this.anunciosService.listarFavoritos();
     const utilizadores = await this.utilizadoresService.listarUtilizadores();
 
     this.favoritos = favoritos.map(anuncio => ({

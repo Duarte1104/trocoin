@@ -17,35 +17,97 @@
     <p>A carregar conversa...</p>
   </div>
 
-  <div class="empty-state" *ngIf="!carregando && !conversa">
-    <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
-    <h2>Conversa não encontrada</h2>
-    <p>Não foi possível carregar esta conversa.</p>
-  </div>
-
   <div class="conversation-wrapper" *ngIf="!carregando && conversa">
 
     <div class="anuncio-preview" *ngIf="anuncio" (click)="abrirDetalheAnuncio()">
       <img [src]="obterImagemAnuncio()" [alt]="anuncio.titulo">
 
-      <div class="anuncio-info">
+      <div>
         <h2>{{ anuncio.titulo }}</h2>
-        <p>{{ formatarPreco(anuncio.preco) }}</p>
-        <span>Ver anúncio</span>
+        <p>{{ formatarPreco(anuncio.precoFinal || anuncio.preco) }}</p>
+        <span [class.sold]="anuncio.estadoAnuncio === 'vendido'">
+          {{ anuncio.estadoAnuncio === 'vendido' ? 'vendido' : 'ativo' }}
+        </span>
       </div>
 
       <ion-icon name="chevron-forward-outline"></ion-icon>
     </div>
 
-    <div class="proposal-actions">
-      <ion-button size="small" class="buy-button" (click)="proporCompra()">
+    <div class="status-card" *ngIf="propostas.length > 0">
+      <h3>Estado da negociação</h3>
+
+      <div
+        class="proposal-card"
+        *ngFor="let proposta of propostasOrdenadas()"
+        [class.accepted]="proposta.estado === 'aceite'"
+        [class.rejected]="proposta.estado === 'recusada'"
+        [class.paid]="proposta.estado === 'paga'">
+
+        <div class="proposal-header">
+          <div>
+            <strong>{{ proposta.tipo === 'compra' ? 'Proposta de compra' : 'Proposta de troca' }}</strong>
+            <p>{{ textoEstadoProposta(proposta) }}</p>
+          </div>
+
+          <span *ngIf="proposta.valorProposto">
+            {{ formatarPreco(proposta.valorProposto) }}
+          </span>
+        </div>
+
+        <p class="proposal-message" *ngIf="proposta.mensagem">
+          "{{ proposta.mensagem }}"
+        </p>
+
+        <div class="seller-actions" *ngIf="souVendedor() && proposta.estado === 'pendente'">
+          <ion-button class="accept-button" (click)="aceitarProposta(proposta)">
+            Aceitar
+          </ion-button>
+
+          <ion-button class="reject-button" fill="outline" (click)="recusarProposta(proposta)">
+            Recusar
+          </ion-button>
+        </div>
+
+        <div class="buyer-actions" *ngIf="souComprador() && proposta.estado === 'aceite' && proposta.tipo === 'compra'">
+          <ion-button expand="block" class="pay-button" (click)="efetuarPagamento(proposta)">
+            Efetuar pagamento
+          </ion-button>
+        </div>
+
+        <div class="next-step" *ngIf="proposta.estado === 'pendente' && souComprador()">
+          Aguarda a resposta do vendedor.
+        </div>
+
+        <div class="next-step" *ngIf="proposta.estado === 'aceite' && souVendedor()">
+          Proposta aceite. Aguarda o pagamento do comprador.
+        </div>
+
+        <div class="next-step success" *ngIf="proposta.estado === 'paga'">
+          Pagamento efetuado. Agora devem combinar o local de entrega.
+        </div>
+
+        <div class="next-step rejected" *ngIf="proposta.estado === 'recusada' && souComprador()">
+          Proposta recusada. Podes enviar uma nova proposta.
+        </div>
+
+      </div>
+    </div>
+
+    <div class="proposal-actions" *ngIf="podeCriarNovaProposta()">
+      <ion-button
+        class="buy-button"
+        *ngIf="anuncio?.tipo === 'venda'"
+        (click)="proporCompra()">
         <ion-icon name="card-outline" slot="start"></ion-icon>
-        Compra
+        Nova proposta
       </ion-button>
 
-      <ion-button size="small" class="trade-button" (click)="proporTroca()">
+      <ion-button
+        class="trade-button"
+        *ngIf="anuncio?.tipo === 'troca'"
+        (click)="proporTroca()">
         <ion-icon name="swap-horizontal-outline" slot="start"></ion-icon>
-        Troca
+        Nova troca
       </ion-button>
     </div>
 
@@ -57,17 +119,13 @@
         [class.mine]="mensagemDoUtilizador(mensagem)"
         [class.theirs]="!mensagemDoUtilizador(mensagem)">
 
-        <div class="message-bubble" [class.proposal]="mensagem.tipo !== 'texto'">
+        <div
+          class="message-bubble"
+          [class.system]="mensagem.tipo !== 'texto' && mensagem.tipo !== 'proposta-compra' && mensagem.tipo !== 'proposta-troca'">
           <p>{{ mensagem.texto }}</p>
           <span>{{ mensagem.data }}</span>
         </div>
 
-      </div>
-
-      <div class="no-messages" *ngIf="mensagens.length === 0">
-        <ion-icon name="chatbubble-outline"></ion-icon>
-        <p>Ainda não existem mensagens nesta conversa.</p>
-        <small>Envia uma mensagem para iniciar a negociação.</small>
       </div>
 
     </div>
