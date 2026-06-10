@@ -47,7 +47,9 @@
             {{ anuncioVendido() ? 'Vendido' : (anuncioTrocado() ? 'Trocado' : a.estadoConservacao) }}
           </ion-label>
         </ion-chip>
-      </div> <h2>{{ a.titulo }}</h2>
+      </div>
+
+      <h2>{{ a.titulo }}</h2>
 
       <p class="location">
         <ion-icon name="location-outline"></ion-icon>
@@ -57,9 +59,11 @@
       <p class="date">
         Publicado em {{ a.dataPublicacao | date:'dd/MM/yyyy' }}
       </p>
-    </div> <div class="status-card" [class.sold]="anuncioVendido() || anuncioTrocado()">
+    </div>
+
+    <div class="status-card" [class.sold]="anuncioVendido() || anuncioTrocado()">
       <div class="status-icon">
-        <ion-icon [name]="anuncioVendido() ? 'checkmark-circle-outline' : 'information-circle-outline'"></ion-icon>
+        <ion-icon [name]="obterIconeEstado()"></ion-icon>
       </div>
 
       <div>
@@ -139,4 +143,18 @@
       </ion-button>
     </div>
 
-  </div> </ion-content>
+    <div class="owner-actions" *ngIf="podeRemoverAnuncio()">
+      <ion-button
+        expand="block"
+        fill="outline"
+        color="danger"
+        class="remove-button"
+        (click)="confirmarRemoverAnuncio()">
+        <ion-icon name="trash-outline" slot="start"></ion-icon>
+        Remover anúncio
+      </ion-button>
+    </div>
+
+  </div>
+
+</ion-content>

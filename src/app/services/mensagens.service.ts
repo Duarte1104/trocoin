@@ -157,4 +157,27 @@ export class MensagensService {
 
     await this.storageService.guardar(this.CHAVE_CONVERSAS, conversas);
   }
+
+  public async removerConversasPorAnuncio(anuncioId: number): Promise<void> {
+  const conversas = await this.listarConversas();
+
+  const conversasParaRemover = conversas.filter(conversa =>
+    conversa.anuncioId === anuncioId
+  );
+
+  const idsConversas = conversasParaRemover.map(conversa => conversa.id);
+
+  const conversasAtualizadas = conversas.filter(conversa =>
+    conversa.anuncioId !== anuncioId
+  );
+
+  const mensagens = await this.storageService.obter<Mensagem[]>(this.CHAVE_MENSAGENS) || [];
+
+  const mensagensAtualizadas = mensagens.filter(mensagem =>
+    !idsConversas.includes(mensagem.conversaId)
+  );
+
+  await this.storageService.guardar(this.CHAVE_CONVERSAS, conversasAtualizadas);
+  await this.storageService.guardar(this.CHAVE_MENSAGENS, mensagensAtualizadas);
+}
 }

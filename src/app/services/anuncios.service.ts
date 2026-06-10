@@ -219,4 +219,47 @@ export class AnunciosService {
     )
   );
 }
+
+
+//parte de o utilizador nao ter anuncio de moeda para troca
+public async removerAnuncioProprio(anuncioId: number, utilizadorId: number): Promise<boolean> {
+  const anuncio = await this.obterAnuncioPorId(anuncioId);
+
+  if (!anuncio) {
+    return false;
+  }
+
+  if (anuncio.vendedorId !== utilizadorId) {
+    return false;
+  }
+
+  if ((anuncio.estadoAnuncio || 'ativo') !== 'ativo') {
+    return false;
+  }
+
+  const anunciosCriados =
+    await this.storageService.obter<Anuncio[]>(this.chaveAnunciosCriados) || [];
+
+  const estavaNosCriados = anunciosCriados.some(a => a.id === anuncioId);
+
+  if (estavaNosCriados) {
+    const atualizados = anunciosCriados.filter(a => a.id !== anuncioId);
+    await this.storageService.guardar(this.chaveAnunciosCriados, atualizados);
+  } else {
+    await this.atualizarAnuncio({
+      ...anuncio,
+      estadoAnuncio: 'inativo'
+    });
+  }
+
+  const favoritos =
+    await this.storageService.obter<number[]>(this.chaveFavoritos) || [];
+
+  await this.storageService.guardar(
+    this.chaveFavoritos,
+    favoritos.filter(id => id !== anuncioId)
+  );
+
+  return true;
+}
 }

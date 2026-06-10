@@ -315,3 +315,14 @@ ion-toolbar ion-button {
   --border-color: #ff5a00;
   --color: #ff5a00;
 }
+
+.owner-actions {
+  padding: 0 18px 28px;
+}
+
+.remove-button {
+  height: 46px;
+  --border-radius: 16px;
+  text-transform: none;
+  font-weight: 900;
+}

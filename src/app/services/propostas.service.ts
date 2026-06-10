@@ -411,4 +411,15 @@ export class PropostasService {
       currency: 'EUR'
     }).format(preco);
   }
+
+  public async removerPropostasPorAnuncio(anuncioId: number): Promise<void> {
+  const propostas = await this.listarPropostas();
+
+  const propostasAtualizadas = propostas.filter(proposta =>
+    proposta.anuncioId !== anuncioId &&
+    proposta.anuncioTrocaId !== anuncioId
+  );
+
+  await this.storageService.guardar(this.CHAVE_PROPOSTAS, propostasAtualizadas);
+}
 }

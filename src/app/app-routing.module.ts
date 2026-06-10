@@ -18,6 +18,11 @@ const routes: Routes = [
       import('./criar-conta/criar-conta.module').then(m => m.CriarContaPageModule)
   },
   {
+  path: 'recuperar-password',
+  loadChildren: () =>
+    import('./recuperar-password/recuperar-password.module').then(m => m.RecuperarPasswordPageModule)
+  },  
+  {
     path: 'tabs',
     loadChildren: () =>
       import('./tabs/tabs.module').then(m => m.TabsPageModule)
@@ -61,6 +66,10 @@ const routes: Routes = [
     path: 'compra-realizada/:id',
     loadChildren: () =>
       import('./compra-realizada/compra-realizada.module').then(m => m.CompraRealizadaPageModule)
+  },
+  {
+    path: 'recuperar-password',
+    loadChildren: () => import('./recuperar-password/recuperar-password.module').then( m => m.RecuperarPasswordPageModule)
   }
 ];
 

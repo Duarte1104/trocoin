@@ -26,6 +26,11 @@ export class LoginPage {
     private loadingController: LoadingController
   ) {}
 
+  /** Encaminha o utilizador para a recuperação fictícia da palavra-passe */
+    public recuperarPassword(): void {
+      this.router.navigateByUrl('/recuperar-password');
+    }
+
   /**
    * Tenta autenticar o utilizador com as credenciais introduzidas.
    * Se as credenciais forem válidas, redireciona para a página principal.
